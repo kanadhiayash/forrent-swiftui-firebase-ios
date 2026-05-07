@@ -1,0 +1,79 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userPath(userId) {
+      return /databases/$(database)/documents/users/$(userId);
+    }
+
+    function currentRole() {
+      return get(userPath(request.auth.uid)).data.role;
+    }
+
+    function isTenant() {
+      return isSignedIn() && currentRole() == "tenant";
+    }
+
+    function isLandlord() {
+      return isSignedIn() && currentRole() == "landlord";
+    }
+
+    match /users/{userId} {
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow read, update: if isSignedIn() && request.auth.uid == userId;
+      allow delete: if false;
+    }
+
+    match /properties/{propertyId} {
+      allow get, list: if
+        (resource.data.isListed == true && resource.data.isAssigned == false) ||
+        (isSignedIn() && resource.data.landlordId == request.auth.uid);
+
+      allow create: if
+        isLandlord() &&
+        request.resource.data.landlordId == request.auth.uid;
+
+      allow update: if
+        isLandlord() &&
+        resource.data.landlordId == request.auth.uid &&
+        request.resource.data.landlordId == resource.data.landlordId;
+
+      allow delete: if
+        isLandlord() &&
+        resource.data.landlordId == request.auth.uid;
+    }
+
+    match /requests/{requestId} {
+      allow get: if
+        isSignedIn() &&
+        (
+          !exists(/databases/$(database)/documents/requests/$(requestId)) ||
+          resource.data.tenantId == request.auth.uid ||
+          resource.data.landlordId == request.auth.uid
+        );
+
+      allow list: if
+        isSignedIn() &&
+        (
+          resource.data.tenantId == request.auth.uid ||
+          resource.data.landlordId == request.auth.uid
+        );
+
+      allow create: if
+        isTenant() &&
+        request.resource.data.tenantId == request.auth.uid &&
+        requestId == request.auth.uid + "_" + request.resource.data.propertyId;
+
+      allow update: if
+        isLandlord() &&
+        resource.data.landlordId == request.auth.uid &&
+        request.resource.data.diff(resource.data).changedKeys().hasOnly(["status"]);
+
+      allow delete: if false;
+    }
+  }
+}

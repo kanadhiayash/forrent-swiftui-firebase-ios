@@ -1,0 +1,50 @@
+# macOS
+.DS_Store
+
+# Xcode user/workspace state
+xcuserdata/
+*.xcuserstate
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+
+# Xcode build outputs and archives
+DerivedData/
+build/
+Build/
+*.ipa
+*.xcarchive
+*.dSYM
+*.dSYM.zip
+*.hmap
+
+# Swift Package Manager generated outputs
+.build/
+.swiftpm/
+Packages/
+
+# CocoaPods generated dependencies, if added later
+Pods/
+
+# Logs and local reports
+*.log
+logs/
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/test_output/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+GoogleService-Info.plist
+**/GoogleService-Info.plist
+*.p8
+*.pem
+*.key
+ServiceAccount*.json
+firebase-service-account*.json
+*service-account*.json
+
+# Local nested repository placeholder created during release prep.
+# Keep the public GitHub repository rooted at this folder instead.
+forrent-swiftui-firebase-ios/
