@@ -216,7 +216,7 @@ For Rent uses Firebase Authentication for account identity and Cloud Firestore f
 ### Clone
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/kanadhiayash/forrent-swiftui-firebase-ios.git
 cd forrent-swiftui-firebase-ios
 ```
 
