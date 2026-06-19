@@ -95,7 +95,7 @@ For Rent provides a role-based SwiftUI experience backed by Firebase Auth and Fi
 
 ## Architecture Direction
 
-Keep views presentation-focused, view models responsible for state and validation, and service classes responsible for Firebase operations. Preserve code-safe `FourRent` identifiers and use **For Rent** for user-facing copy.
+Keep views presentation-focused, view models responsible for state and validation, and service classes responsible for Firebase operations. Use **For Rent** consistently for project and product identity, with `ForRentApp` only where Swift requires a code-safe symbol.
 
 ## Firebase/Auth Strategy
 

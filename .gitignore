@@ -1,6 +1,9 @@
 # macOS
 .DS_Store
 
+# Local agent/editor configuration
+.codex/
+
 # Xcode user/workspace state
 xcuserdata/
 *.xcuserstate

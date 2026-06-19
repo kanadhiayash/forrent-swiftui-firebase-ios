@@ -12,7 +12,7 @@ For Rent uses Firebase Authentication with email/password accounts for tenants a
 
 ## User Model
 
-File: `FourRent/Models/AppUser.swift`
+File: `For Rent/Models/AppUser.swift`
 
 Fields:
 
@@ -26,7 +26,7 @@ Fields:
 
 ## Property Model
 
-File: `FourRent/Models/Property.swift`
+File: `For Rent/Models/Property.swift`
 
 Fields:
 
@@ -45,7 +45,7 @@ Fields:
 
 ## Request Model
 
-File: `FourRent/Models/Request.swift`
+File: `For Rent/Models/Request.swift`
 
 Fields:
 
@@ -63,7 +63,7 @@ Shortlist is stored as an array of property IDs on `users/{uid}.shortlisted`, wi
 
 ## Role Model
 
-File: `FourRent/Models/Enums.swift`
+File: `For Rent/Models/Enums.swift`
 
 Roles:
 
@@ -114,11 +114,11 @@ Roles:
 ## Local Setup Notes
 
 1. Create a Firebase project.
-2. Add an iOS app with bundle ID `com.yashkanadhia.FourRent`.
+2. Add an iOS app with bundle ID `com.yashkanadhia.ForRent`.
 3. Enable Authentication -> Email/Password.
 4. Enable Firestore.
 5. Download `GoogleService-Info.plist`.
-6. Place it at `FourRent/Services/GoogleService-Info.plist` for local builds.
+6. Place it at `For Rent/Services/GoogleService-Info.plist` for local builds.
 7. Do not commit the real plist.
-8. Use `FourRent/Services/GoogleService-Info.example.plist` as the public template.
+8. Use `For Rent/Services/GoogleService-Info.example.plist` as the public template.
 9. Review and deploy `firestore.rules` for shared Firebase environments.

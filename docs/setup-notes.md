@@ -10,11 +10,11 @@
 ## Firebase Setup
 
 1. Create a Firebase project.
-2. Add an iOS app with bundle ID `com.yashkanadhia.FourRent`.
+2. Add an iOS app with bundle ID `com.yashkanadhia.ForRent`.
 3. Download `GoogleService-Info.plist`.
-4. Place the real plist at `FourRent/Services/GoogleService-Info.plist`.
+4. Place the real plist at `For Rent/Services/GoogleService-Info.plist`.
 5. Keep the real plist local. It is intentionally ignored by Git.
-6. Use `FourRent/Services/GoogleService-Info.example.plist` only as a public template.
+6. Use `For Rent/Services/GoogleService-Info.example.plist` only as a public template.
 
 ## Firestore Setup
 
@@ -25,7 +25,7 @@
 
 ## Local Build
 
-1. Open `FourRent.xcodeproj` in Xcode.
+1. Open `For Rent.xcodeproj` in Xcode.
 2. Wait for Swift Package Manager dependencies to resolve.
 3. Select an iOS simulator.
 4. Build and run from Xcode.

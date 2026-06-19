@@ -98,9 +98,9 @@
 
 ## Testing Checklist
 
-- `xcodebuild -list -project FourRent.xcodeproj`
-- `xcodebuild -showdestinations -project FourRent.xcodeproj -scheme FourRent`
-- `xcodebuild build -project FourRent.xcodeproj -scheme FourRent -destination 'generic/platform=iOS Simulator'`
+- `xcodebuild -list -project "For Rent.xcodeproj"`
+- `xcodebuild -showdestinations -project "For Rent.xcodeproj" -scheme "For Rent"`
+- `xcodebuild build -project "For Rent.xcodeproj" -scheme "For Rent" -destination 'generic/platform=iOS Simulator'`
 - Manual tenant sign-up/login.
 - Manual landlord sign-up/login.
 - Manual add/update/delete/de-list property.

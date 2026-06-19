@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-The detected project is an iOS SwiftUI app named `FourRent` at the code and Xcode target level. The intended public product name is now **For Rent**. The app already had the right portfolio concept: role-based landlord, tenant, and guest rental flows backed by Firebase Authentication and Firestore. Before the upgrade, the app compiled conceptually but had several portfolio-critical wiring gaps: no durable auth-state restoration, weak validation, force-unwrapped users in tenant flows, unfiltered landlord properties, incomplete delete/de-list behavior, request writes hidden behind `try?`, non-persisted profile updates, and public Firebase config risk.
+The detected project is an iOS SwiftUI app named `For Rent` at the code and Xcode target level. The intended public product name is now **For Rent**. The app already had the right portfolio concept: role-based landlord, tenant, and guest rental flows backed by Firebase Authentication and Firestore. Before the upgrade, the app compiled conceptually but had several portfolio-critical wiring gaps: no durable auth-state restoration, weak validation, force-unwrapped users in tenant flows, unfiltered landlord properties, incomplete delete/de-list behavior, request writes hidden behind `try?`, non-persisted profile updates, and public Firebase config risk.
 
 ## Current Product Understanding
 
@@ -10,10 +10,10 @@ For Rent is a rental property portfolio app where landlords create and manage li
 
 ## Current Technical Architecture
 
-- Xcode project: `FourRent.xcodeproj`
-- Target: `FourRent`
-- Entry point: `FourRent/FourRentApp.swift`
-- Root routing: `FourRent/ContentView.swift`
+- Xcode project: `For Rent.xcodeproj`
+- Target: `For Rent`
+- Entry point: `For Rent/ForRentApp.swift`
+- Root routing: `For Rent/ContentView.swift`
 - Models: `AppUser`, `Property`, `Request`, `RequestStatus`, `UserRole`
 - ViewModels: `AuthViewModel`, `PropertyViewModel`, `RequestViewModel`, `ShortlistViewModel`
 - Services: `AuthService`, `FirestoreService`, `UserDefaultsManager`, `ImageManager`
@@ -47,7 +47,7 @@ Unauthenticated users land on `LoginView`, can create an account in `SignUpView`
 - Request creation and status updates used `try?`, hiding Firestore failures.
 - Request acceptance did not update property availability.
 - `isListed` in `AddPropertyView` was ignored by `PropertyViewModel`.
-- User-facing docs and copy used `FourRent`, not **For Rent**.
+- User-facing docs and copy used `For Rent`, not **For Rent**.
 
 ## What Is Incomplete
 
@@ -60,7 +60,7 @@ Unauthenticated users land on `LoginView`, can create an account in `SignUpView`
 
 ## Wire-Up Issues
 
-- `FourRentApp` initialized `AuthViewModel` before Firebase configuration; this was made safer by configuring Firebase before creating `StateObject` view models.
+- `ForRentApp` initialized `AuthViewModel` before Firebase configuration; this was made safer by configuring Firebase before creating `StateObject` view models.
 - `RequestViewModel` now keeps a single listener instead of creating repeated listeners on view refresh.
 - `PropertyViewModel` now owns add/update/delete/de-list operations instead of views calling Firestore directly.
 - `ShortlistView` now avoids force unwraps and loads tenant shortlist from Firestore.
@@ -70,7 +70,7 @@ Unauthenticated users land on `LoginView`, can create an account in `SignUpView`
 - Auth profile restoration was missing.
 - Profile updates were not persisted.
 - Login and sign-up validation was too light.
-- A real `GoogleService-Info.plist` was detected locally under `FourRent/Services/`.
+- A real `GoogleService-Info.plist` was detected locally under `For Rent/Services/`.
 
 ## Firestore CRUD Issues
 
@@ -124,7 +124,7 @@ Unauthenticated users land on `LoginView`, can create an account in `SignUpView`
 
 ### P0
 
-- Preserve code-safe `FourRent` target identifiers while renaming user-facing app to **For Rent**.
+- Use `For Rent` for project, target, product, folder, and user-facing identity; use `ForRentApp` where Swift requires a code-safe symbol.
 - Restore auth state safely after app launch.
 - Fix landlord property filtering.
 - Fix property delete/de-list.

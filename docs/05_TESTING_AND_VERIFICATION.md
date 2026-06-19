@@ -14,7 +14,7 @@ Status: **Build succeeded**
 Command:
 
 ```bash
-xcodebuild build -project FourRent.xcodeproj -scheme FourRent -destination 'generic/platform=iOS Simulator'
+xcodebuild build -project "For Rent.xcodeproj" -scheme "For Rent" -destination 'generic/platform=iOS Simulator'
 ```
 
 Result:
@@ -29,8 +29,8 @@ Warnings:
 
 ## Manual Xcode Verification Steps
 
-1. Open `FourRent.xcodeproj`.
-2. Add your local `GoogleService-Info.plist` under `FourRent/Services/`.
+1. Open `For Rent.xcodeproj`.
+2. Add your local `GoogleService-Info.plist` under `For Rent/Services/`.
 3. Select a simulator.
 4. Run the app.
 5. Test tenant, landlord, and guest paths with separate Firebase accounts.

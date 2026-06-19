@@ -4,15 +4,15 @@ For Rent uses a small MVVM structure that keeps SwiftUI views focused on renderi
 
 ## App Entry
 
-- `FourRent/FourRentApp.swift` configures Firebase and injects shared view models into the environment.
-- `FourRent/Views/RootView.swift` routes users based on authentication state and role.
-- `FourRent/ContentView.swift` remains the app's primary content wrapper.
+- `For Rent/ForRentApp.swift` configures Firebase and injects shared view models into the environment.
+- `For Rent/Views/RootView.swift` routes users based on authentication state and role.
+- `For Rent/ContentView.swift` remains the app's primary content wrapper.
 
 ## Layers
 
 ### Models
 
-`FourRent/Models/` defines the app's core data contracts:
+`For Rent/Models/` defines the app's core data contracts:
 
 - `AppUser`: profile, role, contact details, and shortlist IDs.
 - `Property`: listing details, location, landlord owner ID, listing state, and assigned state.
@@ -22,7 +22,7 @@ For Rent uses a small MVVM structure that keeps SwiftUI views focused on renderi
 
 ### View Models
 
-`FourRent/ViewModels/` owns async user actions and screen state:
+`For Rent/ViewModels/` owns async user actions and screen state:
 
 - `AuthViewModel`: registration, login, logout, guest mode, profile loading, and profile updates.
 - `PropertyViewModel`: listed property browsing, landlord property inventory, create/update/delete/de-list actions.
@@ -31,7 +31,7 @@ For Rent uses a small MVVM structure that keeps SwiftUI views focused on renderi
 
 ### Services
 
-`FourRent/Services/` wraps external and local persistence:
+`For Rent/Services/` wraps external and local persistence:
 
 - `AuthService`: Firebase Auth calls.
 - `FirestoreService`: Firestore queries, writes, listeners, and batched request/property updates.
@@ -40,7 +40,7 @@ For Rent uses a small MVVM structure that keeps SwiftUI views focused on renderi
 
 ### Views
 
-`FourRent/Views/` is organized by user journey:
+`For Rent/Views/` is organized by user journey:
 
 - `Auth/`: login, sign-up, and auth selection.
 - `Guest/`: guest property browsing.

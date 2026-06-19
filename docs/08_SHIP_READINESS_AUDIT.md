@@ -10,7 +10,7 @@ For Rent is ready to publish as a GitHub portfolio project after screenshots are
 
 - Command-line Xcode simulator build succeeds.
 - User-facing product name is **For Rent**.
-- Code-safe `FourRent` identifiers remain stable.
+- Project, target, product, source folder, and display name use `For Rent`; the Swift entry point uses `ForRentApp`.
 - Firebase Auth and Firestore service boundaries are clear.
 - Tenant/guest property browsing uses listed and unassigned property queries.
 - Landlord property inventory uses owner-scoped queries.

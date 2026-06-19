@@ -104,7 +104,7 @@ For Rent uses a role-aware SwiftUI app structure backed by Firebase Authenticati
 | IDE Detected | Xcode 26.3 |
 | iOS Deployment Target | iOS 18.0 |
 
-Firebase packages are resolved through Swift Package Manager in `FourRent.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`.
+Firebase packages are resolved through Swift Package Manager in `For Rent.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`.
 
 ## Architecture Overview
 
@@ -132,13 +132,18 @@ Primary services:
 - `UserDefaultsManager`: local cached state.
 - `ImageManager`: local image persistence.
 
+Shared UI foundations are defined in `For Rent/DesignSystem/ForRentDesignTokens.swift`
+and reusable components such as `ButtonStyles.swift` and `StatusChip.swift`.
+
 ## Folder Structure
 
 ```text
-FourRent/
-├── FourRent.xcodeproj/
-├── FourRent/
+.
+├── For Rent.xcodeproj/
+├── For Rent/
 │   ├── Assets.xcassets/
+│   ├── DesignSystem/
+│   │   └── ForRentDesignTokens.swift
 │   ├── Models/
 │   │   ├── AppUser.swift
 │   │   ├── Enums.swift
@@ -160,8 +165,10 @@ FourRent/
 │   │   ├── Shared/
 │   │   └── Tenant/
 │   ├── ContentView.swift
-│   └── FourRentApp.swift
+│   └── ForRentApp.swift
 ├── docs/
+├── DESIGN.md
+├── PRODUCT.md
 ├── firestore.rules
 ├── LICENSE
 └── README.md
@@ -219,7 +226,7 @@ cd forrent-swiftui-firebase-ios
 2. Add an iOS app with bundle ID:
 
 ```text
-com.yashkanadhia.FourRent
+com.yashkanadhia.ForRent
 ```
 
 3. Enable Email/Password Authentication.
@@ -228,14 +235,14 @@ com.yashkanadhia.FourRent
 6. Place the real plist here:
 
 ```text
-FourRent/Services/GoogleService-Info.plist
+For Rent/Services/GoogleService-Info.plist
 ```
 
 7. Keep the real plist local. It is intentionally ignored by Git.
 8. Use the included placeholder file only as a setup reference:
 
 ```text
-FourRent/Services/GoogleService-Info.example.plist
+For Rent/Services/GoogleService-Info.example.plist
 ```
 
 9. Review `firestore.rules` before using a shared Firebase project.
@@ -257,7 +264,7 @@ your-firebase-project-id
 
 ### Recommended: Xcode
 
-1. Open `FourRent.xcodeproj`.
+1. Open `For Rent.xcodeproj`.
 2. Wait for Swift Package Manager dependencies to resolve.
 3. Confirm your local `GoogleService-Info.plist` is present.
 4. Select an iOS simulator.
@@ -267,8 +274,8 @@ your-firebase-project-id
 
 ```bash
 xcodebuild build \
-  -project FourRent.xcodeproj \
-  -scheme FourRent \
+  -project "For Rent.xcodeproj" \
+  -scheme "For Rent" \
   -destination 'generic/platform=iOS Simulator' \
   CODE_SIGNING_ALLOWED=NO
 ```

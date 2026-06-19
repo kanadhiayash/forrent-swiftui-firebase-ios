@@ -2,36 +2,36 @@
 
 ## Project Detected
 
-Detected Xcode project: `FourRent.xcodeproj`
+Detected Xcode project: `For Rent.xcodeproj`
 
-Detected app target/module: `FourRent`
+Detected app target/module: `For Rent`
 
 Final user-facing product name: **For Rent**
 
 ## Product Rename Summary
 
-- Preserved code-safe identifiers: `FourRentApp`, `FourRent` target, bundle ID `com.yashkanadhia.FourRent`, folders, and Swift file names.
+- Unified project identity around `For Rent`, with `ForRentApp` as the Swift entry-point symbol and `com.yashkanadhia.ForRent` as the bundle ID.
 - Updated user-facing text to **For Rent** where visible.
 - Added `INFOPLIST_KEY_CFBundleDisplayName = "For Rent"` in `project.pbxproj`.
 
 ## Files Audited
 
-- `FourRent/FourRentApp.swift`
-- `FourRent/ContentView.swift`
-- `FourRent/Models/*.swift`
-- `FourRent/ViewModels/*.swift`
-- `FourRent/Services/*.swift`
-- `FourRent/Views/**/*.swift`
-- `FourRent/Utilities/*.swift`
-- `FourRent.xcodeproj/project.pbxproj`
-- `FourRent/ReadMe.md`
-- `FourRent/Services/GoogleService-Info.plist`
+- `For Rent/ForRentApp.swift`
+- `For Rent/ContentView.swift`
+- `For Rent/Models/*.swift`
+- `For Rent/ViewModels/*.swift`
+- `For Rent/Services/*.swift`
+- `For Rent/Views/**/*.swift`
+- `For Rent/Utilities/*.swift`
+- `For Rent.xcodeproj/project.pbxproj`
+- `For Rent/ReadMe.md`
+- `For Rent/Services/GoogleService-Info.plist`
 
 ## Files Created
 
 - `.gitignore`
 - `README.md`
-- `FourRent/Services/GoogleService-Info.example.plist`
+- `For Rent/Services/GoogleService-Info.example.plist`
 - `firestore.rules`
 - `docs/00_PROJECT_AUDIT.md`
 - `docs/01_PROJECT_BRIEF.md`
@@ -45,32 +45,32 @@ Final user-facing product name: **For Rent**
 
 ## Files Modified
 
-- `FourRent.xcodeproj/project.pbxproj`
-- `FourRent/FourRentApp.swift`
-- `FourRent/ContentView.swift`
-- `FourRent/Services/FirestoreService.swift`
-- `FourRent/ViewModels/AuthViewModel.swift`
-- `FourRent/ViewModels/PropertyViewModel.swift`
-- `FourRent/ViewModels/RequestViewModel.swift`
-- `FourRent/ViewModels/ShortlistViewModel.swift`
-- `FourRent/Views/Auth/LoginView.swift`
-- `FourRent/Views/Auth/SignUpView.swift`
-- `FourRent/Views/Auth/AuthSelectionView.swift`
-- `FourRent/Views/RootView.swift`
-- `FourRent/Views/Landlord/AddPropertyView.swift`
-- `FourRent/Views/Landlord/UpdatePropertyView.swift`
-- `FourRent/Views/Landlord/LandlordHomeView.swift`
-- `FourRent/Views/Components/MyPropertiesView.swift`
-- `FourRent/Views/Components/LocationSearchView.swift`
-- `FourRent/Views/Tenant/TenantHomeView.swift`
-- `FourRent/Views/Guest/GuestHomeView.swift`
-- `FourRent/Views/Shared/ShortlistView.swift`
-- `FourRent/Views/Shared/PropertyDetailView.swift`
-- `FourRent/Views/Shared/PropertyCardView.swift`
-- `FourRent/Views/Shared/RequestsView.swift`
-- `FourRent/Views/Shared/ProfileView.swift`
-- `FourRent/Views/Shared/EditProfileView.swift`
-- `FourRent/ReadMe.md`
+- `For Rent.xcodeproj/project.pbxproj`
+- `For Rent/ForRentApp.swift`
+- `For Rent/ContentView.swift`
+- `For Rent/Services/FirestoreService.swift`
+- `For Rent/ViewModels/AuthViewModel.swift`
+- `For Rent/ViewModels/PropertyViewModel.swift`
+- `For Rent/ViewModels/RequestViewModel.swift`
+- `For Rent/ViewModels/ShortlistViewModel.swift`
+- `For Rent/Views/Auth/LoginView.swift`
+- `For Rent/Views/Auth/SignUpView.swift`
+- `For Rent/Views/Auth/AuthSelectionView.swift`
+- `For Rent/Views/RootView.swift`
+- `For Rent/Views/Landlord/AddPropertyView.swift`
+- `For Rent/Views/Landlord/UpdatePropertyView.swift`
+- `For Rent/Views/Landlord/LandlordHomeView.swift`
+- `For Rent/Views/Components/MyPropertiesView.swift`
+- `For Rent/Views/Components/LocationSearchView.swift`
+- `For Rent/Views/Tenant/TenantHomeView.swift`
+- `For Rent/Views/Guest/GuestHomeView.swift`
+- `For Rent/Views/Shared/ShortlistView.swift`
+- `For Rent/Views/Shared/PropertyDetailView.swift`
+- `For Rent/Views/Shared/PropertyCardView.swift`
+- `For Rent/Views/Shared/RequestsView.swift`
+- `For Rent/Views/Shared/ProfileView.swift`
+- `For Rent/Views/Shared/EditProfileView.swift`
+- `For Rent/ReadMe.md`
 
 ## Functional Fixes Made
 
@@ -134,7 +134,7 @@ Final user-facing product name: **For Rent**
 - `.gitignore` added.
 - Firebase config template added.
 - Real Firebase plist is ignored by path and filename.
-- Git was initialized locally and `git status --short --ignored` confirms `FourRent/Services/GoogleService-Info.plist`, `.DS_Store`, and Xcode `xcuserdata` are ignored.
+- Git was initialized locally and `git status --short --ignored` confirms `For Rent/Services/GoogleService-Info.plist`, `.DS_Store`, and Xcode `xcuserdata` are ignored.
 - Recommended repo name, description, topics, and commit sequence documented.
 
 ## Remaining Limitations
