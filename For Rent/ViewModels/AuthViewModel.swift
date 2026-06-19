@@ -23,6 +23,7 @@ class AuthViewModel: ObservableObject {
     @Published var isLoading = false
     
     private var authStateHandle: AuthStateDidChangeListenerHandle?
+    private var isHandlingAuthMutation = false
     
     var isAuthenticated: Bool {
         user != nil
@@ -54,6 +55,8 @@ class AuthViewModel: ObservableObject {
                     self.isLoading = false
                     return
                 }
+
+                guard !self.isHandlingAuthMutation else { return }
                 
                 do {
                     self.user = try await FirestoreService.shared.fetchUser(uid: firebaseUser.uid)
@@ -112,6 +115,7 @@ class AuthViewModel: ObservableObject {
         
         isLoading = true
         errorMessage = nil
+        isHandlingAuthMutation = true
         
         do {
             let firebaseUser = try await AuthService.shared.register(
@@ -138,11 +142,13 @@ class AuthViewModel: ObservableObject {
             }
             
             user = newUser
+            successMessage = "Account created."
             
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = authErrorMessage(for: error)
         }
         
+        isHandlingAuthMutation = false
         isLoading = false
     }
     
@@ -158,6 +164,7 @@ class AuthViewModel: ObservableObject {
         
         isLoading = true
         errorMessage = nil
+        isHandlingAuthMutation = true
         
         do {
             let firebaseUser = try await AuthService.shared.login(
@@ -170,10 +177,12 @@ class AuthViewModel: ObservableObject {
             user = fetchedUser
             
         } catch {
-            errorMessage = error.localizedDescription
+            try? AuthService.shared.logout()
+            errorMessage = authErrorMessage(for: error)
             user = nil
         }
         
+        isHandlingAuthMutation = false
         isLoading = false
     }
     
@@ -221,6 +230,36 @@ class AuthViewModel: ObservableObject {
             errorMessage = nil
         } catch {
             errorMessage = "Unable to sign out. \(error.localizedDescription)"
+        }
+    }
+
+    private func authErrorMessage(for error: Error) -> String {
+        let nsError = error as NSError
+
+        guard nsError.domain == AuthErrorDomain,
+              let authCode = AuthErrorCode(rawValue: nsError.code) else {
+            return error.localizedDescription
+        }
+
+        switch authCode {
+        case .emailAlreadyInUse:
+            return "An account already exists for this email."
+        case .invalidCredential, .wrongPassword, .userNotFound:
+            return "The email or password is incorrect."
+        case .weakPassword:
+            return "Use a password with at least 6 characters."
+        case .invalidEmail:
+            return "Enter a valid email address."
+        case .operationNotAllowed:
+            return "Email/password sign-in is not enabled for this Firebase project."
+        case .networkError:
+            return "Unable to reach Firebase. Check your internet connection and try again."
+        case .tooManyRequests:
+            return "Too many attempts. Wait a moment and try again."
+        case .userDisabled:
+            return "This account has been disabled."
+        default:
+            return error.localizedDescription
         }
     }
 }
