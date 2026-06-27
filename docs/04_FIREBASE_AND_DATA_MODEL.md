@@ -55,7 +55,8 @@ Fields:
 - `tenantId`
 - `tenantName`
 - `tenantPhone`
-- `status`: `pending`, `accepted`, or `rejected`.
+- `status`: `submitted`, `acknowledged`, `viewing_scheduled`, `accepted`,
+  `rejected`, `cancelled`, or `expired`.
 
 ## Shortlist/Favorite Model
 
@@ -99,7 +100,9 @@ Roles:
 - Tenant and guest property browsing queries only listed and unassigned properties.
 - Landlord inventory queries only properties where `landlordId` matches the signed-in user.
 - Request listeners query by `tenantId` for tenants and `landlordId` for landlords.
-- Request creation uses deterministic IDs in the shape `{tenantId}_{propertyId}` to block duplicate pending requests for the same tenant/property pair.
+- Inquiry creation uses deterministic IDs in the shape
+  `{tenantId}_{propertyId}` to block duplicate inquiries for the same
+  renter/listing pair.
 
 ## Security Considerations
 

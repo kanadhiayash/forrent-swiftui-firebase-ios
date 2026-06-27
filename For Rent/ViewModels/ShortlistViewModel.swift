@@ -10,6 +10,7 @@ import Combine
 
 @MainActor
 class ShortlistViewModel: ObservableObject {
+    private let environment: AppEnvironment
     
     @Published var shortlistedIds: Set<String> = []
     @Published var errorMessage: String?
@@ -17,12 +18,22 @@ class ShortlistViewModel: ObservableObject {
     
     private let keyPrefix = "shortlisted_properties"
     private var activeUserId: String?
+
+    init(environment: AppEnvironment? = nil) {
+        self.environment = environment ?? .firebase
+    }
     
     func toggle(propertyId: String, userId: String?) async {
         errorMessage = nil
 
         guard let userId else {
             errorMessage = "Sign in as a renter to save properties."
+            return
+        }
+
+        if let demoSession = environment.demoSession {
+            activeUserId = userId
+            shortlistedIds = demoSession.toggleShortlist(propertyId: propertyId, userId: userId)
             return
         }
 
@@ -59,13 +70,20 @@ class ShortlistViewModel: ObservableObject {
     }
     
     func loadFromFirestore(userId: String) async {
+        if let demoSession = environment.demoSession {
+            activeUserId = userId
+            shortlistedIds = demoSession.shortlistedIds(for: userId)
+            errorMessage = nil
+            return
+        }
+
         activate(userId: userId)
         isLoading = true
         errorMessage = nil
         
         do {
-            let user = try await FirestoreService.shared.fetchUser(uid: userId)
-            shortlistedIds = Set(user.shortlisted)
+            let propertyIds = try await FirestoreService.shared.fetchShortlistedPropertyIds(userId: userId)
+            shortlistedIds = Set(propertyIds)
             saveLocal()
         } catch {
             errorMessage = "Unable to load saved properties."

@@ -15,46 +15,40 @@ struct ShortlistView: View {
     
     var body: some View {
         
-        NavigationStack {
+        let savedProperties = propertyVM.availableProperties.filter {
+            shortlistVM.isSaved($0.id)
+        }
             
-            let savedProperties = propertyVM.availableProperties.filter {
-                shortlistVM.isSaved($0.id)
-            }
-            
-            if savedProperties.isEmpty {
-                
-                Text("No saved properties")
-                    .foregroundColor(.gray)
-                
+        Group {
+            if let error = shortlistVM.errorMessage {
+                ErrorView(message: error, dismissAction: {
+                    shortlistVM.errorMessage = nil
+                })
+            } else if savedProperties.isEmpty {
+                ContentUnavailableView {
+                    Label("No saved rentals", systemImage: "heart")
+                } description: {
+                    Text("Save promising listings to compare them here.")
+                }
             } else {
-                
-                List {
-                    ForEach(savedProperties) { property in
+                ScrollView {
+                    LazyVStack(spacing: ForRentTheme.Spacing.md) {
+                        ForEach(savedProperties) { property in
                         
-                        if let user = authVM.user {
-                            NavigationLink {
-                                PropertyDetailView(
-                                    property: property,
-                                    user: user
-                                )
-                            } label: {
-                                PropertyCardView(property: property)
+                            if let user = authVM.user {
+                                NavigationLink {
+                                    PropertyDetailView(
+                                        property: property,
+                                        user: user
+                                    )
+                                } label: {
+                                    PropertyCardView(property: property)
+                                }
+                                .buttonStyle(.plain)
                             }
                         }
                     }
-                    .onDelete { indexSet in
-                        
-                        for index in indexSet {
-                            let property = savedProperties[index]
-                            
-                            Task {
-                                await shortlistVM.toggle(
-                                    propertyId: property.id,
-                                    userId: authVM.user?.id
-                                )
-                            }
-                        }
-                    }
+                    .padding()
                 }
             }
         }
@@ -65,6 +59,5 @@ struct ShortlistView: View {
                 await shortlistVM.loadFromFirestore(userId: user.id)
             }
         }
-        .showError($shortlistVM.errorMessage)
     }
 }

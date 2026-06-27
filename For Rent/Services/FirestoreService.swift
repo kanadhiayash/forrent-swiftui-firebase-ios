@@ -6,6 +6,7 @@
 //
 
 import FirebaseFirestore
+import FirebaseFunctions
 
 enum FirestoreServiceError: LocalizedError {
     case duplicateRequest
@@ -25,6 +26,7 @@ class FirestoreService {
     
     static let shared = FirestoreService()
     private let db = Firestore.firestore()
+    private let functions = Functions.functions()
     
     static func requestId(tenantId: String, propertyId: String) -> String {
         "\(tenantId)_\(propertyId)".replacingOccurrences(of: "/", with: "_")
@@ -129,9 +131,15 @@ class FirestoreService {
     }
     
     func updatePropertyListing(propertyId: String, isListed: Bool) async throws {
-        try await db.collection("properties").document(propertyId).updateData([
-            "isListed": isListed
-        ])
+        if isListed {
+            _ = try await functions.httpsCallable("publishListing").call([
+                "listingId": propertyId
+            ])
+        } else {
+            try await db.collection("properties").document(propertyId).updateData([
+                "isListed": false
+            ])
+        }
     }
     
     // MARK: REQUEST
@@ -151,33 +159,39 @@ class FirestoreService {
     }
     
     func updateRequestStatus(_ request: Request, status: RequestStatus) async throws {
-        let batch = db.batch()
-        
-        let requestRef = db.collection("requests").document(request.id)
-        batch.updateData(["status": status.rawValue], forDocument: requestRef)
-        
-        if status == .accepted {
-            let propertyRef = db.collection("properties").document(request.propertyId)
-            batch.updateData([
-                "isAssigned": true,
-                "isListed": false
-            ], forDocument: propertyRef)
-        }
-        
-        try await batch.commit()
+        _ = try await functions.httpsCallable("transitionInquiry").call([
+            "requestId": request.id,
+            "status": status.rawValue
+        ])
     }
     
     // MARK: SHORTLIST
     
     func updateShortlist(userId: String, propertyId: String) async throws {
-        try await db.collection("users").document(userId).updateData([
-            "shortlisted": FieldValue.arrayUnion([propertyId])
-        ])
+        try await db.collection("users")
+            .document(userId)
+            .collection("savedListings")
+            .document(propertyId)
+            .setData([
+                "listingId": propertyId,
+                "savedAt": FieldValue.serverTimestamp()
+            ])
     }
     
     func removeFromShortlist(userId: String, propertyId: String) async throws {
-        try await db.collection("users").document(userId).updateData([
-            "shortlisted": FieldValue.arrayRemove([propertyId])
-        ])
+        try await db.collection("users")
+            .document(userId)
+            .collection("savedListings")
+            .document(propertyId)
+            .delete()
+    }
+
+    func fetchShortlistedPropertyIds(userId: String) async throws -> [String] {
+        let snapshot = try await db.collection("users")
+            .document(userId)
+            .collection("savedListings")
+            .getDocuments()
+
+        return snapshot.documents.map(\.documentID)
     }
 }

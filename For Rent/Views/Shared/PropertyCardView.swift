@@ -23,7 +23,12 @@ struct PropertyCardView: View {
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)
                     
-                    Text("\(property.rent.toCurrency()) / month")
+                    Label(property.resolvedLocationName, systemImage: "mappin.and.ellipse")
+                        .font(.subheadline)
+                        .foregroundStyle(ForRentTheme.Colors.body)
+                        .lineLimit(1)
+
+                    Text("\(property.rent.toCurrency()) \(property.resolvedPricingCadence.shortLabel)")
                         .font(.title3.weight(.semibold))
                         .foregroundStyle(ForRentTheme.Colors.ink)
                     
@@ -66,30 +71,17 @@ struct PropertyCardView: View {
         .cardStyle()
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilitySummary)
-        .accessibilityHint("Shows the property image, monthly rent, facts, and listing status.")
+        .accessibilityHint("Opens listing details.")
     }
     
     private var propertyImage: some View {
         Group {
-            if let first = property.imageNames.first,
-               let image = ImageManager.shared.loadImage(name: first) {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
+            if let first = property.imageNames.first {
+                ListingImageView(name: first) {
+                    imageUnavailable
+                }
             } else {
-                RoundedRectangle(cornerRadius: ForRentTheme.Radius.media, style: .continuous)
-                    .fill(ForRentTheme.Colors.surfaceSoft)
-                    .overlay {
-                        VStack(spacing: ForRentTheme.Spacing.xs) {
-                            Image(systemName: "photo")
-                                .font(.title3)
-                                .foregroundStyle(ForRentTheme.Colors.muted)
-                            
-                            Text("Image unavailable")
-                                .font(.subheadline)
-                                .foregroundStyle(ForRentTheme.Colors.muted)
-                        }
-                    }
+                imageUnavailable
             }
         }
         .frame(maxWidth: .infinity)
@@ -100,6 +92,20 @@ struct PropertyCardView: View {
                 .stroke(ForRentTheme.Colors.hairline, lineWidth: 1)
         )
         .accessibilityHidden(true)
+    }
+
+    private var imageUnavailable: some View {
+        Rectangle()
+            .fill(ForRentTheme.Colors.surfaceSoft)
+            .overlay {
+                VStack(spacing: ForRentTheme.Spacing.xs) {
+                    Image(systemName: "photo")
+                        .font(.title3)
+                    Text("Image unavailable")
+                        .font(.subheadline)
+                }
+                .foregroundStyle(ForRentTheme.Colors.muted)
+            }
     }
     
     private var listingStatus: (title: String, systemImage: String, tone: StatusChipTone) {
@@ -125,7 +131,8 @@ struct PropertyCardView: View {
     private var accessibilitySummary: String {
         [
             property.title,
-            "\(property.rent.toCurrency()) per month",
+            property.resolvedLocationName,
+            "\(property.rent.toCurrency()) \(property.resolvedPricingCadence.title)",
             property.bedrooms == 1 ? "1 bedroom" : "\(property.bedrooms) bedrooms",
             property.bathrooms == 1 ? "1 bathroom" : "\(property.bathrooms) bathrooms",
             listingStatus.title,

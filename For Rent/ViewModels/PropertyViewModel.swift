@@ -11,6 +11,7 @@ import UIKit
 
 @MainActor
 class PropertyViewModel: ObservableObject {
+    private let environment: AppEnvironment
     
     @Published var properties: [Property] = []
     @Published var errorMessage: String?
@@ -19,6 +20,10 @@ class PropertyViewModel: ObservableObject {
     
     var availableProperties: [Property] {
         properties.filter { $0.isListed && !$0.isAssigned }
+    }
+
+    init(environment: AppEnvironment? = nil) {
+        self.environment = environment ?? .firebase
     }
     
     func landlordProperties(for landlordId: String) -> [Property] {
@@ -44,6 +49,12 @@ class PropertyViewModel: ObservableObject {
     func fetchProperties(for user: AppUser?) async {
         isLoading = true
         errorMessage = nil
+
+        if let demoSession = environment.demoSession {
+            properties = demoSession.properties(for: user)
+            isLoading = false
+            return
+        }
         
         do {
             switch user?.role {
@@ -114,14 +125,25 @@ class PropertyViewModel: ObservableObject {
         
         isLoading = true
         errorMessage = nil
+        var uploadedImageNames: [String] = []
         
         do {
+            let propertyId = UUID().uuidString
+            let imageNames: [String]
+
+            if environment.isDemo {
+                imageNames = ImageManager.shared.saveImages(images)
+            } else {
+                imageNames = try await ListingMediaService.shared.upload(
+                    images: images,
+                    landlordId: landlordId,
+                    listingId: propertyId
+                )
+                uploadedImageNames = imageNames
+            }
             
-            // SAVE IMAGES LOCALLY
-            let imageNames = ImageManager.shared.saveImages(images)
-            
-            let newProperty = Property(
-                id: UUID().uuidString,
+            var newProperty = Property(
+                id: propertyId,
                 title: cleanTitle,
                 details: cleanDetails,
                 rent: rent,
@@ -131,7 +153,7 @@ class PropertyViewModel: ObservableObject {
                 longitude: longitude,
                 imageNames: imageNames,
                 landlordId: landlordId,
-                isListed: isListed,
+                isListed: environment.isDemo ? isListed : false,
                 isAssigned: false,
                 category: category,
                 locationName: resolvedLocationName,
@@ -139,13 +161,31 @@ class PropertyViewModel: ObservableObject {
                 amenities: normalizedAmenities,
                 maxGuests: normalizedMaxGuests
             )
+
+            if let demoSession = environment.demoSession {
+                demoSession.addProperty(newProperty)
+                properties = demoSession.properties(for: demoSession.user(id: landlordId))
+                successMessage = "Property added."
+                isLoading = false
+                return
+            }
             
             try await FirestoreService.shared.addProperty(newProperty)
+            if isListed {
+                try await FirestoreService.shared.updatePropertyListing(
+                    propertyId: newProperty.id,
+                    isListed: true
+                )
+                newProperty.isListed = true
+            }
             
             properties.append(newProperty)
             successMessage = "Property added."
             
         } catch {
+            if !uploadedImageNames.isEmpty {
+                await ListingMediaService.shared.delete(paths: uploadedImageNames)
+            }
             errorMessage = error.localizedDescription
         }
         
@@ -204,6 +244,7 @@ class PropertyViewModel: ObservableObject {
         
         isLoading = true
         errorMessage = nil
+        var uploadedImageNames: [String] = []
         
         do {
             
@@ -222,16 +263,39 @@ class PropertyViewModel: ObservableObject {
             updatedProperty.latitude = latitude
             updatedProperty.longitude = longitude
             
-            // UPDATE IMAGES
-            let imageNames = ImageManager.shared.saveImages(images)
-            updatedProperty.imageNames = imageNames
+            if let demoSession = environment.demoSession {
+                updatedProperty.imageNames = ImageManager.shared.saveImages(images)
+                demoSession.updateProperty(updatedProperty)
+                properties = demoSession.properties(for: demoSession.user(id: updatedProperty.landlordId))
+                successMessage = "Property updated."
+                isLoading = false
+                return
+            }
+
+            let previousImageNames = updatedProperty.imageNames
+            if !images.isEmpty {
+                updatedProperty.imageNames = try await ListingMediaService.shared.upload(
+                    images: images,
+                    landlordId: updatedProperty.landlordId,
+                    listingId: updatedProperty.id
+                )
+                uploadedImageNames = updatedProperty.imageNames
+            }
             
             try await FirestoreService.shared.updateProperty(updatedProperty)
+            if !images.isEmpty {
+                await ListingMediaService.shared.delete(paths: previousImageNames.filter {
+                    $0.hasPrefix("listing-media/")
+                })
+            }
             
             properties[index] = updatedProperty
             successMessage = "Property updated."
             
         } catch {
+            if !uploadedImageNames.isEmpty {
+                await ListingMediaService.shared.delete(paths: uploadedImageNames)
+            }
             errorMessage = error.localizedDescription
         }
         
@@ -248,7 +312,18 @@ class PropertyViewModel: ObservableObject {
         errorMessage = nil
         
         do {
+            if let demoSession = environment.demoSession {
+                demoSession.deleteProperty(propertyId: property.id)
+                properties = demoSession.properties(for: currentUser)
+                successMessage = "Property deleted."
+                isLoading = false
+                return
+            }
+
             try await FirestoreService.shared.deleteProperty(propertyId: property.id)
+            await ListingMediaService.shared.delete(paths: property.imageNames.filter {
+                $0.hasPrefix("listing-media/")
+            })
             properties.removeAll { $0.id == property.id }
             successMessage = "Property deleted."
         } catch {
@@ -270,6 +345,14 @@ class PropertyViewModel: ObservableObject {
         errorMessage = nil
         
         do {
+            if let demoSession = environment.demoSession {
+                demoSession.updatePropertyListing(propertyId: property.id, isListed: isListed)
+                properties = demoSession.properties(for: currentUser)
+                successMessage = isListed ? "Property listed." : "Property de-listed."
+                isLoading = false
+                return
+            }
+
             try await FirestoreService.shared.updatePropertyListing(propertyId: property.id, isListed: isListed)
             properties[index].isListed = isListed
             successMessage = isListed ? "Property listed." : "Property de-listed."

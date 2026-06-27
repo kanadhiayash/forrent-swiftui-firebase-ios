@@ -23,9 +23,26 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow create: if isSignedIn() && request.auth.uid == userId;
-      allow read, update: if isSignedIn() && request.auth.uid == userId;
+      allow create: if
+        isSignedIn() &&
+        request.auth.uid == userId &&
+        request.resource.data.role in ["tenant", "landlord"];
+
+      allow read: if isSignedIn() && request.auth.uid == userId;
+
+      allow update: if
+        isSignedIn() &&
+        request.auth.uid == userId &&
+        request.resource.data.role == resource.data.role &&
+        request.resource.data.id == resource.data.id &&
+        request.resource.data.email == resource.data.email;
+
       allow delete: if false;
+
+      match /savedListings/{listingId} {
+        allow read, create, delete: if isSignedIn() && request.auth.uid == userId;
+        allow update: if false;
+      }
     }
 
     match /properties/{propertyId} {
@@ -35,12 +52,19 @@ service cloud.firestore {
 
       allow create: if
         isLandlord() &&
-        request.resource.data.landlordId == request.auth.uid;
+        request.resource.data.landlordId == request.auth.uid &&
+        request.resource.data.isListed == false &&
+        request.resource.data.isAssigned == false;
 
       allow update: if
         isLandlord() &&
         resource.data.landlordId == request.auth.uid &&
-        request.resource.data.landlordId == resource.data.landlordId;
+        request.resource.data.landlordId == resource.data.landlordId &&
+        request.resource.data.id == resource.data.id &&
+        (
+          request.resource.data.isListed == resource.data.isListed ||
+          request.resource.data.isListed == false
+        );
 
       allow delete: if
         isLandlord() &&
@@ -66,12 +90,17 @@ service cloud.firestore {
       allow create: if
         isTenant() &&
         request.resource.data.tenantId == request.auth.uid &&
-        requestId == request.auth.uid + "_" + request.resource.data.propertyId;
+        request.resource.data.status == "submitted" &&
+        requestId == request.auth.uid + "_" + request.resource.data.propertyId &&
+        exists(/databases/$(database)/documents/properties/$(request.resource.data.propertyId)) &&
+        get(/databases/$(database)/documents/properties/$(request.resource.data.propertyId)).data.landlordId ==
+          request.resource.data.landlordId &&
+        get(/databases/$(database)/documents/properties/$(request.resource.data.propertyId)).data.isListed == true &&
+        get(/databases/$(database)/documents/properties/$(request.resource.data.propertyId)).data.isAssigned == false;
 
-      allow update: if
-        isLandlord() &&
-        resource.data.landlordId == request.auth.uid &&
-        request.resource.data.diff(resource.data).changedKeys().hasOnly(["status"]);
+      // Status changes are performed by trusted callable functions so the
+      // related property and inquiry update can be committed atomically.
+      allow update: if false;
 
       allow delete: if false;
     }

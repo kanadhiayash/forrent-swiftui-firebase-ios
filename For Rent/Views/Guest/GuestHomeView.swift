@@ -19,47 +19,40 @@ struct GuestHomeView: View {
             Group {
                 
                 if propertyVM.isLoading {
-                    
-                    VStack {
-                        ProgressView()
-                        Text("Loading properties...")
-                            .foregroundColor(.gray)
-                    }
-                    
-                } else if propertyVM.availableProperties.isEmpty {
-                    
-                    Text("No properties available")
-                        .foregroundColor(.gray)
-                    
-                } else {
-                    
                     ScrollView {
-                        
-                        LazyVStack(spacing: 16) {
-                            
-                            ForEach(propertyVM.availableProperties) { property in
-                                
-                                NavigationLink(
-                                    destination: PropertyDetailView(
-                                        property: property,
-                                        user: authVM.user ?? AppUser(
-                                            id: UUID().uuidString,
-                                            email: "",
-                                            role: .guest,
-                                            firstName: "Guest",
-                                            lastName: "",
-                                            phone: "",
-                                            shortlisted: []
-                                        )
-                                    )
-                                ) {
-                                    PropertyCardView(property: property)
-                                }
-                                .buttonStyle(.plain)
+                        LazyVStack(spacing: ForRentTheme.Spacing.md) {
+                            ForEach(0..<3, id: \.self) { _ in
+                                ListingSkeletonView()
                             }
                         }
                         .padding()
                     }
+                } else if let error = propertyVM.errorMessage {
+                    ErrorView(message: error, retryAction: {
+                        Task {
+                            await propertyVM.fetchProperties(for: authVM.user)
+                        }
+                    })
+                } else if propertyVM.availableProperties.isEmpty {
+                    ContentUnavailableView {
+                        Label("No rentals available", systemImage: "house")
+                    } description: {
+                        Text("Try again shortly or sign in to manage your account.")
+                    }
+
+                } else {
+                    MarketplaceResultsView(
+                        properties: propertyVM.availableProperties,
+                        user: authVM.user ?? AppUser(
+                            id: "guest",
+                            email: "",
+                            role: .guest,
+                            firstName: "Guest",
+                            lastName: "",
+                            phone: "",
+                            shortlisted: []
+                        )
+                    )
                 }
             }
             .navigationTitle("Browse Rentals")
@@ -68,6 +61,14 @@ struct GuestHomeView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Back") {
                         authVM.logout()
+                    }
+                }
+
+                if authVM.isDemoMode {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Reset Demo") {
+                            authVM.resetDemo()
+                        }
                     }
                 }
             }

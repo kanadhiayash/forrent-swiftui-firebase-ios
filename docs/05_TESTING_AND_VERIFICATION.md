@@ -1,116 +1,56 @@
-# For Rent Testing And Verification
+# For Rent Testing and Verification
 
-## What Was Tested
+## Automated gates
 
-- Project discovery with `xcodebuild -list`.
-- Destination discovery with `xcodebuild -showdestinations`.
-- Simulator build with `xcodebuild build`.
-- Swift compile after Firebase/Auth/Firestore/view rewiring.
+The shared Xcode scheme includes:
 
-## Build Verification Status
+- `For RentTests`: fixture decoding, environment selection, deterministic reset,
+  legacy listing migration, and inquiry transition tests.
+- `For RentUITests`: launches the app, selects the demo guest, and verifies the
+  public marketplace appears.
 
-Status: **Build succeeded**
+Firebase emulator tests verify:
 
-Command:
+- Public read and unauthenticated write boundaries.
+- Role escalation denial.
+- Listing owner enforcement.
+- Valid renter inquiry creation.
+- Denial of direct inquiry status changes.
+- Storage upload and delete ownership.
+- Non-routable demo account data.
+
+## Commands
 
 ```bash
-xcodebuild build -project "For Rent.xcodeproj" -scheme "For Rent" -destination 'generic/platform=iOS Simulator'
+npm ci
+npm audit --audit-level=moderate
+npm run validate:demo
+npm run test:firebase
+npm run scan:secrets
+
+xcodebuild test \
+  -project "For Rent.xcodeproj" \
+  -scheme "For Rent" \
+  -destination "platform=iOS Simulator,name=iPhone 17 Pro,OS=latest" \
+  -parallel-testing-enabled NO
 ```
 
-Result:
+CI also removes `DemoSeed.json` temporarily and builds the same target to prove
+that deleting the fixture is sufficient for clean Firebase mode.
 
-```text
-** BUILD SUCCEEDED **
-```
+## Manual product QA
 
-Warnings:
+Review compact iPhone, iPhone 17 Pro, and iPad layouts in light and dark mode.
+For each, check:
 
-- No project-specific Swift compile warnings were observed in the final command-line build. Xcode emitted an AppIntents metadata note because the app does not use AppIntents.
+- Default and accessibility Dynamic Type sizes.
+- VoiceOver labels and reading order.
+- Reduce Motion behavior.
+- Guest sign-in handoff preserving the selected listing.
+- Renter save and inquiry states.
+- Landlord create, edit, publish, pause, and inquiry decisions.
+- Loading, empty, error, unavailable, and missing-media states.
 
-## Manual Xcode Verification Steps
-
-1. Open `For Rent.xcodeproj`.
-2. Add your local `GoogleService-Info.plist` under `For Rent/Services/`.
-3. Select a simulator.
-4. Run the app.
-5. Test tenant, landlord, and guest paths with separate Firebase accounts.
-
-## Auth Flow Checklist
-
-- Sign up as tenant.
-- Sign up as landlord.
-- Login as tenant.
-- Login as landlord.
-- Logout.
-- Relaunch app and confirm Firebase auth-state restoration.
-
-## Landlord Flow Checklist
-
-- Add a property with valid title, details, rent, bedroom, bathroom, location, and listing status.
-- Confirm only owned properties appear in My Properties.
-- Update property fields.
-- De-list property and confirm it disappears from tenant/guest browsing.
-- Delete property after confirmation.
-- View incoming requests.
-- Accept a pending request.
-- Deny a pending request.
-
-## Tenant Flow Checklist
-
-- Browse available listed/unassigned rentals.
-- Search by title/details.
-- Filter by maximum rent.
-- View property detail.
-- Save a property.
-- Remove saved property.
-- Send one request to a property.
-- Confirm duplicate request is blocked.
-- View request status.
-
-## Guest Flow Checklist
-
-- Continue as guest.
-- Browse available rentals.
-- View property details.
-- Share property.
-- Try to save/request and confirm sign-in prompt appears.
-
-## Firebase Checklist
-
-- Email/password Auth enabled.
-- Firestore enabled.
-- Real `GoogleService-Info.plist` exists locally but is not committed.
-- `firestore.rules` exists and should be deployed or emulator-tested before sharing a Firebase backend.
-
-## Firestore Checklist
-
-- `users/{uid}` created at sign-up.
-- `properties/{propertyId}` created/updated/deleted by landlord.
-- `requests/{requestId}` created by tenant.
-- Accepted request updates request status and property availability.
-- `users/{uid}.shortlisted` updates on save/remove.
-- Tenant/guest property reads use listed/unassigned queries.
-- Landlord property reads use landlord-owned queries.
-- Request listeners are scoped by tenant or landlord ID.
-
-## Accessibility Checklist
-
-- Property cards expose a combined accessibility summary.
-- Login button has descriptive label.
-- Search and rent filters have accessibility labels.
-- Status uses icon plus text, not color alone.
-- Empty states use clear copy.
-
-## Known Limitations
-
-- No automated test target.
-- No Firebase Storage; listing images are local to the device.
-- Firestore security rules are included but not emulator-tested.
-- No README screenshots yet.
-- Manual simulator walkthrough is still required for full Firebase account and Firestore rule validation.
-
-## Remaining Risks
-
-- Manual Firebase rules can still allow incorrect access if misconfigured.
-- Local image filenames in Firestore do not work across devices.
-- Real Firebase plist must be kept out of Git history.
+Real release screenshots and Firebase-account walkthrough evidence must be
+captured before a public release. No placeholder image should be represented as
+release evidence.

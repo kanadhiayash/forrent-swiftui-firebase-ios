@@ -1,0 +1,108 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-ios-simulator:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build app
+        run: >
+          xcodebuild build
+          -project "For Rent.xcodeproj"
+          -scheme "For Rent"
+          -destination "generic/platform=iOS Simulator"
+          CODE_SIGNING_ALLOWED=NO
+
+  unit-tests:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run unit tests
+        run: >
+          xcodebuild test
+          -project "For Rent.xcodeproj"
+          -scheme "For Rent"
+          -destination "platform=iOS Simulator,name=iPhone 16 Pro,OS=latest"
+          -only-testing:"For RentTests"
+          -parallel-testing-enabled NO
+          CODE_SIGNING_ALLOWED=NO
+
+  ui-smoke-tests:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run guest marketplace smoke test
+        run: >
+          xcodebuild test
+          -project "For Rent.xcodeproj"
+          -scheme "For Rent"
+          -destination "platform=iOS Simulator,name=iPhone 16 Pro,OS=latest"
+          -only-testing:"For RentUITests/ForRentSmokeTests/test_demoGuestCanOpenMarketplace"
+          -parallel-testing-enabled NO
+          CODE_SIGNING_ALLOWED=NO
+
+  firebase-emulator-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci
+      - run: npm ci --prefix functions
+      - run: npm run lint --prefix functions
+      - run: npm audit --prefix functions --audit-level=moderate
+      - run: npm run test:firebase
+
+  secrets-hygiene:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm run scan:secrets
+
+  demo-fixture-validation:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate deterministic fixture
+        run: npm run validate:demo
+      - name: Prove clean Firebase mode compiles without fixture
+        shell: bash
+        run: |
+          mv "For Rent/Resources/DemoSeed.json" /tmp/DemoSeed.json
+          trap 'mv /tmp/DemoSeed.json "For Rent/Resources/DemoSeed.json"' EXIT
+          xcodebuild build \
+            -project "For Rent.xcodeproj" \
+            -scheme "For Rent" \
+            -destination "generic/platform=iOS Simulator" \
+            CODE_SIGNING_ALLOWED=NO

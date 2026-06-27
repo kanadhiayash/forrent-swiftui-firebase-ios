@@ -8,35 +8,28 @@ For Rent is a restrained, high-trust iOS product. Use Apple-native interaction p
 
 ### Core
 
-- `primary`: `#181D26`
-- `primaryActive`: `#0D1218`
-- `ink`: `#181D26`
-- `body`: `#333840`
-- `muted`: `#41454D`
+- Trust blue `primary`: `#003580`
+- Trust blue active `primaryActive`: `#00224F`
+- Action blue `action`: `#0071C2`
+- Action blue active `actionActive`: `#005999`
+- Highlight yellow `yellow`: `#FFB700`, always with dark text
+- `ink`: `#1A1A1A`
+- `body`: `#474747`
+- `muted`: `#6B6B6B`
 - `canvas`: `#FFFFFF`
 - `surfaceSoft`: `#F8FAFC`
 - `surfaceStrong`: `#E0E2E6`
 - `hairline`: `#DDDDDD`
 - `borderStrong`: `#9297A0`
 
-### Signature
-
-- `coral`: `#AA2D00`
-- `forest`: `#0A2E0E`
-- `cream`: `#F5E9D4`
-- `peach`: `#FCAB79`
-- `mint`: `#A8D8C4`
-- `yellow`: `#F4D35E`
-- `mustard`: `#D9A441`
-
 ### Semantic
 
-- Primary actions use `primary` with white text.
-- Destructive emphasis uses `coral` with a text label or icon.
-- Confirmed and available states use `forest` with text or icon.
-- Pending states use `mustard` or `yellow` with dark text.
-- Informational links use `#1B61C9`; active links use `#1A3866`.
-- Do not use signature colors as decoration. Each color must communicate role, category, or state.
+- Brand surfaces use trust blue. Primary task buttons use action blue.
+- Destructive emphasis uses semantic red with a text label or icon.
+- Confirmed and available states use semantic green with text or icon.
+- Pending states use highlight yellow with dark text.
+- Informational links use action blue.
+- Color never carries status by itself.
 
 ## Typography
 
@@ -96,7 +89,7 @@ For Rent is a restrained, high-trust iOS product. Use Apple-native interaction p
 
 ## Motion
 
-- Use 150-250 ms state transitions.
+- Use 100-250 ms state transitions.
 - Prefer opacity and small positional transitions for state changes.
 - Respect Reduce Motion.
 - Do not animate screen content only for decoration.

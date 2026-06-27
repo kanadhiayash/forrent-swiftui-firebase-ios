@@ -1,0 +1,22 @@
+{
+  "name": "for-rent-functions",
+  "private": true,
+  "main": "index.js",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.10.0",
+    "firebase-functions": "^7.2.5"
+  },
+  "devDependencies": {
+    "eslint": "^10.0.0"
+  },
+  "overrides": {
+    "uuid": "^11.1.1"
+  }
+}

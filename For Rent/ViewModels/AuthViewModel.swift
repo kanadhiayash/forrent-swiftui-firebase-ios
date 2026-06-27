@@ -16,11 +16,13 @@ import Combine
 
 @MainActor
 class AuthViewModel: ObservableObject {
+    private let environment: AppEnvironment
     
     @Published var user: AppUser? = nil
     @Published var errorMessage: String?
     @Published var successMessage: String?
     @Published var isLoading = false
+    @Published var pendingProtectedProperty: Property?
     
     private var authStateHandle: AuthStateDidChangeListenerHandle?
     
@@ -32,7 +34,19 @@ class AuthViewModel: ObservableObject {
         user?.role ?? .guest
     }
     
-    init() {
+    var isDemoMode: Bool {
+        environment.isDemo
+    }
+
+    var demoUsers: [AppUser] {
+        environment.demoSession?.demoUsers ?? []
+    }
+
+    init(environment: AppEnvironment? = nil) {
+        let resolvedEnvironment = environment ?? .firebase
+        self.environment = resolvedEnvironment
+
+        guard resolvedEnvironment.isFirebase else { return }
         observeAuthState()
     }
     
@@ -70,6 +84,12 @@ class AuthViewModel: ObservableObject {
     // MARK: Guest
     func continueAsGuest() {
         errorMessage = nil
+
+        if let demoSession = environment.demoSession {
+            user = demoSession.continueAsGuest()
+            return
+        }
+
         user = AppUser(
             id: UUID().uuidString,
             email: "",
@@ -79,6 +99,27 @@ class AuthViewModel: ObservableObject {
             phone: "",
             shortlisted: []
         )
+    }
+
+    func selectDemoUser(id: String) {
+        guard let demoSession = environment.demoSession else { return }
+
+        errorMessage = nil
+        user = demoSession.selectUser(id: id)
+    }
+
+    func requireAuthentication(for property: Property) {
+        pendingProtectedProperty = property
+        logout()
+    }
+
+    func resetDemo() {
+        guard let demoSession = environment.demoSession else { return }
+
+        demoSession.reset()
+        user = demoSession.currentUser
+        errorMessage = nil
+        successMessage = "Demo reset."
     }
     
     // MARK: Register
@@ -91,6 +132,10 @@ class AuthViewModel: ObservableObject {
         phone: String,
         role: UserRole
     ) async {
+        guard environment.isFirebase else {
+            errorMessage = "Demo mode is active. Choose a demo account to continue."
+            return
+        }
         
         let normalizedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         let cleanFirstName = firstName.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -148,6 +193,10 @@ class AuthViewModel: ObservableObject {
     
     // MARK: Login
     func login(email: String, password: String) async {
+        guard environment.isFirebase else {
+            errorMessage = "Demo mode is active. Choose a demo account to continue."
+            return
+        }
         
         let normalizedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         
@@ -189,6 +238,22 @@ class AuthViewModel: ObservableObject {
             errorMessage = "First and last name are required."
             return
         }
+
+        if let demoSession = environment.demoSession {
+            currentUser.firstName = cleanFirstName
+            currentUser.lastName = cleanLastName
+            currentUser.phone = cleanPhone
+
+            user = demoSession.updateProfile(
+                userId: currentUser.id,
+                firstName: cleanFirstName,
+                lastName: cleanLastName,
+                phone: cleanPhone
+            )
+            successMessage = "Profile updated."
+            errorMessage = nil
+            return
+        }
         
         isLoading = true
         errorMessage = nil
@@ -215,6 +280,14 @@ class AuthViewModel: ObservableObject {
     
     // MARK: Logout
     func logout() {
+        if let demoSession = environment.demoSession {
+            demoSession.clearSelectedUser()
+            user = nil
+            errorMessage = nil
+            successMessage = nil
+            return
+        }
+
         do {
             try AuthService.shared.logout()
             user = nil

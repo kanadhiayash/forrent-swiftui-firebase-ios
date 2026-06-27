@@ -1,395 +1,121 @@
 # For Rent
 
-**A SwiftUI rental marketplace prototype that connects landlord listing management, tenant discovery, rental requests, and shortlist workflows through Firebase Auth and Firestore.**
+For Rent is a SwiftUI long-term rental marketplace for Canadian renters,
+landlords, and guests. The current branch adds deterministic offline demo data,
+Firebase-backed clean mode, guarded listing and inquiry operations, shared
+feedback components, and automated quality gates.
 
-For Rent is an iOS portfolio project built to demonstrate product thinking, SwiftUI implementation, MVVM architecture, Firebase-backed persistence, and role-based app flows for a rental marketplace experience.
+This repository is an implementation project and does not claim an App Store
+release or deployed production backend.
 
-## Project Overview
+## Demo switch
 
-For Rent supports three user contexts:
+`For Rent/Resources/DemoSeed.json` is the only demo-mode switch.
 
-| User Type | Purpose |
-| --- | --- |
-| Guest | Browse available rentals before signing in. |
-| Tenant | Browse properties, save favorites, and send rental requests. |
-| Landlord | Create, manage, list/de-list, and review requests for owned properties. |
+- Present: the app opens with 12 deterministic Canadian listings and guest,
+  renter, and landlord walkthroughs.
+- Deleted: the app selects clean Firebase mode. No demo accounts, records, or
+  chooser are loaded.
 
-The project is intentionally scoped as a portfolio-grade iOS prototype, not a production App Store release. It focuses on clean flow wiring, data ownership, and understandable Firebase integration.
+Demo mutations stay in memory and reset on relaunch. The profile and guest
+toolbars also provide a Reset Demo action. Demo records are never uploaded to
+Firebase.
 
-## Problem Statement
-
-Rental marketplace apps require multiple workflows to stay synchronized: authentication, user roles, listing availability, saved properties, request status, and landlord approvals. If those concerns are handled only in the UI or scattered across views, users can see stale listings, duplicate requests, unclear permissions, or inconsistent state.
-
-## Solution
-
-For Rent uses a role-aware SwiftUI app structure backed by Firebase Authentication and Cloud Firestore. SwiftUI views render the experience, view models own user actions and state transitions, and service classes centralize Firebase operations. Firestore records model users, properties, requests, and tenant shortlists so major actions produce persisted state changes.
-
-## Key Features
-
-### Implemented
-
-- Email/password authentication with Firebase Authentication.
-- Tenant and landlord role selection during sign-up.
-- Guest browsing flow for listed, unassigned properties.
-- Role-based routing after login.
-- Landlord property creation with rent, beds, baths, location, images, and listing status.
-- Landlord-owned property filtering.
-- Property editing, de-listing, re-listing, and deletion.
-- Tenant browsing with search and max-rent filtering.
-- Property detail screens with listing information, local images, map preview, and share action.
-- Tenant shortlist/favorites using Firestore and local cache.
-- Rental request creation with deterministic request IDs to reduce duplicates.
-- Landlord request acceptance and rejection.
-- Accepted requests update property availability by marking the property assigned and unlisted.
-- Profile display and profile editing.
-- Loading, empty, error, success, and confirmation states.
-- Baseline Firestore security rules in `firestore.rules`.
-
-### Planned
-
-- Firebase Storage-backed listing images.
-- Automated unit and UI tests.
-- Firestore Emulator Suite validation for rules.
-- Screenshots and demo GIF/video.
-- More advanced listing filters.
-
-## Product / User Flows
-
-### Guest Flow
-
-1. Open the app without signing in.
-2. Continue as guest.
-3. Browse listed and unassigned properties.
-4. View property details.
-5. Share a property.
-6. Sign in as a tenant to save or request a property.
-
-### Tenant Flow
-
-1. Create an account or log in as a tenant.
-2. Browse available rentals.
-3. Search by text or filter by maximum rent.
-4. Open a property detail page.
-5. Save or remove the property from shortlist.
-6. Send a rental request.
-7. Track request status as pending, accepted, or rejected.
-8. Update profile information.
-
-### Landlord Flow
-
-1. Create an account or log in as a landlord.
-2. Add a rental property.
-3. View only owned properties.
-4. Edit listing details.
-5. List, de-list, or delete a property.
-6. Review incoming tenant requests.
-7. Accept or reject pending requests.
-8. Accepted requests remove the property from public browsing.
-
-## Tech Stack
-
-| Layer | Technology |
-| --- | --- |
-| Platform | iOS |
-| UI | SwiftUI |
-| Architecture | MVVM |
-| Language | Swift |
-| Authentication | Firebase Authentication |
-| Database | Cloud Firestore |
-| Maps | MapKit |
-| Media Picker | PhotosUI |
-| Local Media Storage | FileManager |
-| Lightweight Local State | UserDefaults |
-| Dependency Management | Swift Package Manager |
-| IDE Detected | Xcode 26.3 |
-| iOS Deployment Target | iOS 18.0 |
-
-Firebase packages are resolved through Swift Package Manager in `For Rent.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`.
-
-## Architecture Overview
-
-The app follows MVVM with a small service layer:
-
-| Layer | Responsibility |
-| --- | --- |
-| Views | Render SwiftUI screens, navigation, forms, and reusable components. |
-| ViewModels | Own screen state, validation, role checks, async actions, and user-facing errors. |
-| Services | Wrap Firebase Auth, Firestore reads/writes/listeners, local defaults, and image persistence. |
-| Models | Define codable Firestore-backed app entities. |
-| Utilities | Provide validation, extensions, and image helper logic. |
-
-Primary view models:
-
-- `AuthViewModel`: auth state, guest mode, registration, login, logout, profile updates.
-- `PropertyViewModel`: property fetch, filtering, create, update, delete, and listing status.
-- `RequestViewModel`: request listener, tenant request creation, landlord accept/reject.
-- `ShortlistViewModel`: saved property state, Firestore sync, and local cache.
-
-Primary services:
-
-- `AuthService`: Firebase Auth wrapper.
-- `FirestoreService`: Firestore users, properties, requests, shortlist operations, and listeners.
-- `UserDefaultsManager`: local cached state.
-- `ImageManager`: local image persistence.
-
-Shared UI foundations are defined in `For Rent/DesignSystem/ForRentDesignTokens.swift`
-and reusable components such as `ButtonStyles.swift` and `StatusChip.swift`.
-
-## Folder Structure
-
-```text
-.
-├── For Rent.xcodeproj/
-├── For Rent/
-│   ├── Assets.xcassets/
-│   ├── DesignSystem/
-│   │   └── ForRentDesignTokens.swift
-│   ├── Models/
-│   │   ├── AppUser.swift
-│   │   ├── Enums.swift
-│   │   ├── Property.swift
-│   │   ├── Request.swift
-│   │   └── RequestStatus.swift
-│   ├── Services/
-│   │   ├── AuthService.swift
-│   │   ├── FirestoreService.swift
-│   │   ├── GoogleService-Info.example.plist
-│   │   └── UserDefaultsManager.swift
-│   ├── Utilities/
-│   ├── ViewModels/
-│   ├── Views/
-│   │   ├── Auth/
-│   │   ├── Components/
-│   │   ├── Guest/
-│   │   ├── Landlord/
-│   │   ├── Shared/
-│   │   └── Tenant/
-│   ├── ContentView.swift
-│   └── ForRentApp.swift
-├── docs/
-├── DESIGN.md
-├── PRODUCT.md
-├── firestore.rules
-├── LICENSE
-└── README.md
-```
-
-## Data Model / Backend Overview
-
-For Rent uses Firebase Authentication for account identity and Cloud Firestore for app data.
-
-### Firestore Collections
-
-| Collection | Purpose |
-| --- | --- |
-| `users` | Stores profile fields, role, email, phone, and shortlisted property IDs. |
-| `properties` | Stores listing details, owner ID, location, local image filenames, and listing/assignment state. |
-| `requests` | Stores tenant requests, landlord/property references, tenant contact info, and request status. |
-
-### Core Models
-
-| Model | Key Fields |
-| --- | --- |
-| `AppUser` | `id`, `email`, `role`, `firstName`, `lastName`, `phone`, `shortlisted` |
-| `Property` | `id`, `title`, `details`, `rent`, `bedrooms`, `bathrooms`, `latitude`, `longitude`, `imageNames`, `landlordId`, `isListed`, `isAssigned` |
-| `Request` | `id`, `propertyId`, `landlordId`, `tenantId`, `tenantName`, `tenantPhone`, `status` |
-| `RequestStatus` | `pending`, `accepted`, `rejected` |
-
-### Backend Notes
-
-- Tenant/guest browsing fetches properties where `isListed == true` and `isAssigned == false`.
-- Landlord inventory fetches properties by `landlordId`.
-- Request listeners are scoped by tenant ID or landlord ID.
-- Request IDs use `{tenantId}_{propertyId}` to reduce duplicate requests for the same tenant/property pair.
-- Accepting a request updates both the request status and property availability in a Firestore batch.
-- Listing images are currently stored locally, not in Firebase Storage.
-
-## Setup and Installation
-
-### Requirements
-
-- macOS with Xcode installed.
-- Xcode 26.3 was detected in this local environment.
-- iOS simulator support.
-- Firebase project with Authentication and Firestore enabled.
-
-### Clone
+To verify clean mode locally, temporarily move the fixture, build, and restore
+it:
 
 ```bash
-git clone https://github.com/kanadhiayash/forrent-swiftui-firebase-ios.git
-cd forrent-swiftui-firebase-ios
-```
-
-### Firebase Setup
-
-1. Create a Firebase project.
-2. Add an iOS app with bundle ID:
-
-```text
-com.yashkanadhia.ForRent
-```
-
-3. Enable Email/Password Authentication.
-4. Enable Cloud Firestore.
-5. Download `GoogleService-Info.plist`.
-6. Place the real plist here:
-
-```text
-For Rent/Services/GoogleService-Info.plist
-```
-
-7. Keep the real plist local. It is intentionally ignored by Git.
-8. Use the included placeholder file only as a setup reference:
-
-```text
-For Rent/Services/GoogleService-Info.example.plist
-```
-
-9. Review `firestore.rules` before using a shared Firebase project.
-
-## Environment Variables
-
-No committed `.env` file is required for the current iOS app.
-
-Firebase configuration is provided by `GoogleService-Info.plist`. The real file must not be committed. The example plist uses placeholder values such as:
-
-```text
-YOUR_FIREBASE_WEB_API_KEY
-YOUR_GCM_SENDER_ID
-YOUR_GOOGLE_APP_ID
-your-firebase-project-id
-```
-
-## How to Run Locally
-
-### Recommended: Xcode
-
-1. Open `For Rent.xcodeproj`.
-2. Wait for Swift Package Manager dependencies to resolve.
-3. Confirm your local `GoogleService-Info.plist` is present.
-4. Select an iOS simulator.
-5. Build and run.
-
-### Optional: Command-Line Build Check
-
-```bash
+mv "For Rent/Resources/DemoSeed.json" /tmp/DemoSeed.json
 xcodebuild build \
   -project "For Rent.xcodeproj" \
   -scheme "For Rent" \
-  -destination 'generic/platform=iOS Simulator' \
+  -destination "generic/platform=iOS Simulator" \
   CODE_SIGNING_ALLOWED=NO
+mv /tmp/DemoSeed.json "For Rent/Resources/DemoSeed.json"
 ```
 
-## Screenshots / Demo
+## Product capabilities
 
-Screenshots will be added after the final UI capture/export.
+- Canada-wide public rental discovery with search and maximum-rent filtering.
+- Guest browsing with protected actions that preserve listing context.
+- Renter saved listings and viewing inquiries.
+- Landlord listing creation, editing, publishing, pausing, and inquiry review.
+- CAD pricing cadence, public location, amenities, availability, and lifecycle
+  migration through `ListingV2`.
+- Typed inquiry lifecycle through `InquiryStatus`.
+- Firebase Auth, Firestore, Storage, callable Functions, and App Check.
+- Centralized toast feedback, inline validation, service errors, native alerts,
+  skeleton states, and explicit empty states.
+- Booking palette with Apple-native SwiftUI controls, Dynamic Type, haptics,
+  Reduce Motion support, and 100 to 250 ms state motion.
 
-Planned screenshot paths:
+Private addresses and exact occupied-property coordinates are not displayed.
+The demo does not contain passwords, routable emails, real verification claims,
+ratings, scarcity claims, or real personal data.
 
-```text
-docs/assets/screenshots/login.png
-docs/assets/screenshots/tenant-home.png
-docs/assets/screenshots/property-detail.png
-docs/assets/screenshots/shortlist.png
-docs/assets/screenshots/landlord-properties.png
-docs/assets/screenshots/requests.png
+## Architecture
+
+The app uses feature-oriented MVVM:
+
+- Views render role-specific journeys and shared components.
+- View models own validation, async state, and user actions.
+- `AppEnvironment` selects demo repositories or Firebase services at startup.
+- `DemoSession` owns deterministic in-memory demo mutations.
+- Firebase services own Auth, Firestore, Storage, and callable Function access.
+
+Saved listings live under `users/{uid}/savedListings/{listingId}`. Publishing a
+listing and changing inquiry status use callable Functions. Security rules block
+role escalation and direct inquiry-state updates.
+
+## Firebase setup
+
+1. Create a Firebase project for bundle ID `com.yashkanadhia.ForRent`.
+2. Enable Email/Password Auth, Firestore, Storage, Functions, and App Check.
+3. Copy the real plist to `For Rent/Services/GoogleService-Info.plist`.
+4. Keep it local. The real plist is ignored and must never be committed.
+5. Review and test `firestore.rules` and `storage.rules` before deployment.
+
+The committed `GoogleService-Info.example.plist` contains placeholders only.
+No Firebase rules, indexes, Functions, or configuration are deployed by this
+repository automatically.
+
+## Verification
+
+```bash
+npm ci
+npm run validate:demo
+npm run test:firebase
+npm run scan:secrets
+
+xcodebuild test \
+  -project "For Rent.xcodeproj" \
+  -scheme "For Rent" \
+  -destination "platform=iOS Simulator,name=iPhone 17 Pro,OS=latest" \
+  -parallel-testing-enabled NO
 ```
 
-Demo media will be added after simulator capture.
+GitHub Actions defines these stable checks:
 
-Planned demo path:
+- `build-ios-simulator`
+- `unit-tests`
+- `ui-smoke-tests`
+- `firebase-emulator-tests`
+- `secrets-hygiene`
+- `demo-fixture-validation`
 
-```text
-docs/assets/demo/for-rent-demo.gif
-```
+Remote branch and tag rules are documented in
+`docs/GITHUB_PROTECTION.md`. Applying rulesets, pushing, merging, deploying
+Firebase resources, tagging, and releasing remain owner-approved actions.
 
-## Accessibility and UX Considerations
+## Local Zeref OS
 
-Implemented considerations:
+The optional `.zeref/` clone is ignored. The tested commit and privacy-first
+setup are recorded in `docs/ZEREF_OS_SETUP.md`.
 
-- SwiftUI-native controls for forms, buttons, tabs, lists, and navigation.
-- Role-specific navigation to reduce irrelevant actions.
-- Empty/loading/error states for major async workflows.
-- Confirmation prompts for destructive property deletion.
-- Protected-action messaging when guests try tenant-only actions.
-- Property card accessibility labels for clearer listing summaries.
+## Documentation
 
-Planned improvements:
-
-- Full VoiceOver walkthrough across auth, tenant, landlord, and guest flows.
-- Dynamic Type review on small devices.
-- Color contrast audit after final visual polish.
-- UI tests for key role-based flows.
-
-## QA / Testing Notes
-
-Current verification:
-
-- Command-line simulator build has been validated with `CODE_SIGNING_ALLOWED=NO`.
-- Firestore rules exist as a baseline in `firestore.rules`.
-
-Manual QA checklist:
-
-- Register and log in as a tenant.
-- Register and log in as a landlord.
-- Continue as guest.
-- Add, edit, list/de-list, and delete a landlord property.
-- Browse available listings as tenant and guest.
-- Save and remove a tenant shortlist item.
-- Send a tenant request.
-- Accept and reject landlord requests.
-- Confirm accepted requests update property availability.
-- Edit profile details and confirm persistence.
-
-Testing still needed:
-
-- Unit tests for view models and validation.
-- UI tests for tenant, landlord, and guest journeys.
-- Firebase Emulator Suite tests for Firestore security rules.
-
-## Known Limitations
-
-- Real Firebase configuration is required locally and is not included in the repo.
-- Property images are stored locally with `FileManager`; they do not sync across devices.
-- Firebase Storage is not implemented.
-- Automated test targets are not currently included.
-- Firestore security rules need emulator validation before production use.
-- Screenshots and demo media are placeholders.
-- This is a portfolio prototype, not a production rental marketplace.
-
-## Future Improvements / Roadmap
-
-| Area | Planned Work |
-| --- | --- |
-| Media | Add Firebase Storage for cross-device listing images. |
-| Testing | Add unit, UI, and Firestore emulator tests. |
-| Search | Add bedroom, bathroom, location radius, and availability filters. |
-| UX | Add polished screenshots, preview data, and demo capture. |
-| Data | Add seed/demo data strategy for reviewer-friendly setup. |
-| Operations | Document Firebase indexes if composite indexes are required. |
-
-## Portfolio Case Study Angle
-
-This project is a strong case study for:
-
-- Designing role-based mobile workflows.
-- Separating SwiftUI presentation from state and persistence logic.
-- Modeling Firebase Auth identity separately from Firestore profile data.
-- Enforcing ownership-aware data access in both app logic and Firestore rules.
-- Turning a common marketplace concept into a reviewer-friendly iOS portfolio repo.
-
-Suggested case study sections:
-
-- Product problem and role map.
-- Architecture and Firebase data model.
-- Landlord request acceptance and property availability update flow.
-- Public repo security decisions around Firebase config.
-- Limitations and roadmap.
-
-## Credits / Author
-
-Built by **Yash Kanadhia**.
-
-## License
-
-This repository includes an MIT License. See [LICENSE](LICENSE).
+- `DESIGN.md`: visual and interaction system
+- `PRODUCT.md`: scope and product principles
+- `docs/architecture.md`: boundaries and data flow
+- `docs/05_TESTING_AND_VERIFICATION.md`: evidence and QA matrix
+- `docs/GITHUB_PROTECTION.md`: required remote repository settings

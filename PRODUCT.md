@@ -38,7 +38,9 @@ The experience should feel polished and familiar without copying Airbnb's visual
 2. Put trust before conversion. Surface identity, ratings, policies, availability, and validation before asking users to commit.
 3. Keep one clear next action per screen. Secondary actions should remain available without competing with the primary task.
 4. Use familiar iOS behavior. Prefer native SwiftUI navigation, controls, sheets, alerts, and accessibility behavior.
-5. Show honest system status. Loading, empty, error, success, unavailable, pending, confirmed, and rejected states must be explicit.
+5. Show honest system status. Loading, empty, error, success, unavailable,
+   submitted, acknowledged, viewing, accepted, rejected, cancelled, and expired
+   states must be explicit.
 
 ## Accessibility & Inclusion
 

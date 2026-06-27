@@ -9,10 +9,38 @@
 /* Begin PBXBuildFile section */
 		F36A47932F6D281800F76A51 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = F36A47922F6D281800F76A51 /* FirebaseAuth */; };
 		F36A47952F6D281800F76A51 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = F36A47942F6D281800F76A51 /* FirebaseFirestore */; };
+		F36A48142F7B000100F76A51 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = F36A48132F7B000100F76A51 /* FirebaseFunctions */; };
+		F36A48162F7B000100F76A51 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = F36A48152F7B000100F76A51 /* FirebaseStorage */; };
+		F36A48182F7B000100F76A51 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = F36A48172F7B000100F76A51 /* FirebaseAppCheck */; };
+		F36A48042F7B000100F76A51 /* AppEnvironmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48032F7B000100F76A51 /* AppEnvironmentTests.swift */; };
+		F36A48122F7B000100F76A51 /* MarketplaceModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48112F7B000100F76A51 /* MarketplaceModelsTests.swift */; };
+		F36A48212F7B000100F76A51 /* ForRentSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48232F7B000100F76A51 /* ForRentSmokeTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F36A48052F7B000100F76A51 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F36A46FA2F6D19EC00F76A51 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F36A47012F6D19EC00F76A51;
+			remoteInfo = "For Rent";
+		};
+		F36A48292F7B000100F76A51 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F36A46FA2F6D19EC00F76A51 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F36A47012F6D19EC00F76A51;
+			remoteInfo = "For Rent";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		F36A47022F6D19EC00F76A51 /* For Rent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "For Rent.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F36A48022F7B000100F76A51 /* For RentTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "For RentTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F36A48032F7B000100F76A51 /* AppEnvironmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironmentTests.swift; sourceTree = "<group>"; };
+		F36A48112F7B000100F76A51 /* MarketplaceModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketplaceModelsTests.swift; sourceTree = "<group>"; };
+		F36A48222F7B000100F76A51 /* For RentUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "For RentUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F36A48232F7B000100F76A51 /* ForRentSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForRentSmokeTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -30,6 +58,23 @@
 			files = (
 				F36A47932F6D281800F76A51 /* FirebaseAuth in Frameworks */,
 				F36A47952F6D281800F76A51 /* FirebaseFirestore in Frameworks */,
+				F36A48142F7B000100F76A51 /* FirebaseFunctions in Frameworks */,
+				F36A48162F7B000100F76A51 /* FirebaseStorage in Frameworks */,
+				F36A48182F7B000100F76A51 /* FirebaseAppCheck in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F36A48062F7B000100F76A51 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F36A48252F7B000100F76A51 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +85,8 @@
 			isa = PBXGroup;
 			children = (
 				F36A47042F6D19EC00F76A51 /* For Rent */,
+				F36A48072F7B000100F76A51 /* For RentTests */,
+				F36A48242F7B000100F76A51 /* For RentUITests */,
 				F36A47032F6D19EC00F76A51 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -48,8 +95,27 @@
 			isa = PBXGroup;
 			children = (
 				F36A47022F6D19EC00F76A51 /* For Rent.app */,
+				F36A48022F7B000100F76A51 /* For RentTests.xctest */,
+				F36A48222F7B000100F76A51 /* For RentUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		F36A48072F7B000100F76A51 /* For RentTests */ = {
+			isa = PBXGroup;
+			children = (
+				F36A48032F7B000100F76A51 /* AppEnvironmentTests.swift */,
+				F36A48112F7B000100F76A51 /* MarketplaceModelsTests.swift */,
+			);
+			path = "For RentTests";
+			sourceTree = "<group>";
+		};
+		F36A48242F7B000100F76A51 /* For RentUITests */ = {
+			isa = PBXGroup;
+			children = (
+				F36A48232F7B000100F76A51 /* ForRentSmokeTests.swift */,
+			);
+			path = "For RentUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,10 +140,53 @@
 			packageProductDependencies = (
 				F36A47922F6D281800F76A51 /* FirebaseAuth */,
 				F36A47942F6D281800F76A51 /* FirebaseFirestore */,
+				F36A48132F7B000100F76A51 /* FirebaseFunctions */,
+				F36A48152F7B000100F76A51 /* FirebaseStorage */,
+				F36A48172F7B000100F76A51 /* FirebaseAppCheck */,
 			);
 			productName = "For Rent";
 			productReference = F36A47022F6D19EC00F76A51 /* For Rent.app */;
 			productType = "com.apple.product-type.application";
+		};
+		F36A48082F7B000100F76A51 /* For RentTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F36A480E2F7B000100F76A51 /* Build configuration list for PBXNativeTarget "For RentTests" */;
+			buildPhases = (
+				F36A480A2F7B000100F76A51 /* Sources */,
+				F36A48062F7B000100F76A51 /* Frameworks */,
+				F36A48092F7B000100F76A51 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F36A480B2F7B000100F76A51 /* PBXTargetDependency */,
+			);
+			name = "For RentTests";
+			packageProductDependencies = (
+			);
+			productName = "For RentTests";
+			productReference = F36A48022F7B000100F76A51 /* For RentTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F36A48282F7B000100F76A51 /* For RentUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F36A482D2F7B000100F76A51 /* Build configuration list for PBXNativeTarget "For RentUITests" */;
+			buildPhases = (
+				F36A48272F7B000100F76A51 /* Sources */,
+				F36A48252F7B000100F76A51 /* Frameworks */,
+				F36A48262F7B000100F76A51 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F36A482A2F7B000100F76A51 /* PBXTargetDependency */,
+			);
+			name = "For RentUITests";
+			packageProductDependencies = (
+			);
+			productName = "For RentUITests";
+			productReference = F36A48222F7B000100F76A51 /* For RentUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -91,6 +200,14 @@
 				TargetAttributes = {
 					F36A47012F6D19EC00F76A51 = {
 						CreatedOnToolsVersion = 26.3;
+					};
+					F36A48082F7B000100F76A51 = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = F36A47012F6D19EC00F76A51;
+					};
+					F36A48282F7B000100F76A51 = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = F36A47012F6D19EC00F76A51;
 					};
 				};
 			};
@@ -112,12 +229,28 @@
 			projectRoot = "";
 			targets = (
 				F36A47012F6D19EC00F76A51 /* For Rent */,
+				F36A48082F7B000100F76A51 /* For RentTests */,
+				F36A48282F7B000100F76A51 /* For RentUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		F36A47002F6D19EC00F76A51 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F36A48092F7B000100F76A51 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F36A48262F7B000100F76A51 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -134,7 +267,37 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F36A480A2F7B000100F76A51 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F36A48042F7B000100F76A51 /* AppEnvironmentTests.swift in Sources */,
+				F36A48122F7B000100F76A51 /* MarketplaceModelsTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F36A48272F7B000100F76A51 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F36A48212F7B000100F76A51 /* ForRentSmokeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F36A480B2F7B000100F76A51 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F36A47012F6D19EC00F76A51 /* For Rent */;
+			targetProxy = F36A48052F7B000100F76A51 /* PBXContainerItemProxy */;
+		};
+		F36A482A2F7B000100F76A51 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F36A47012F6D19EC00F76A51 /* For Rent */;
+			targetProxy = F36A48292F7B000100F76A51 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		F36A470B2F6D19ED00F76A51 /* Debug */ = {
@@ -324,6 +487,98 @@
 			};
 			name = Release;
 		};
+		F36A480C2F7B000100F76A51 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2K5NVKRH99;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.yashkanadhia.ForRentTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/For Rent.app/For Rent";
+			};
+			name = Debug;
+		};
+		F36A480D2F7B000100F76A51 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2K5NVKRH99;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.yashkanadhia.ForRentTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/For Rent.app/For Rent";
+			};
+			name = Release;
+		};
+		F36A482B2F7B000100F76A51 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2K5NVKRH99;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.yashkanadhia.ForRentUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "For Rent";
+			};
+			name = Debug;
+		};
+		F36A482C2F7B000100F76A51 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2K5NVKRH99;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.yashkanadhia.ForRentUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "For Rent";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -341,6 +596,24 @@
 			buildConfigurations = (
 				F36A470E2F6D19ED00F76A51 /* Debug */,
 				F36A470F2F6D19ED00F76A51 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F36A480E2F7B000100F76A51 /* Build configuration list for PBXNativeTarget "For RentTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F36A480C2F7B000100F76A51 /* Debug */,
+				F36A480D2F7B000100F76A51 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F36A482D2F7B000100F76A51 /* Build configuration list for PBXNativeTarget "For RentUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F36A482B2F7B000100F76A51 /* Debug */,
+				F36A482C2F7B000100F76A51 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -368,6 +641,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F36A47912F6D281800F76A51 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		F36A48132F7B000100F76A51 /* FirebaseFunctions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F36A47912F6D281800F76A51 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFunctions;
+		};
+		F36A48152F7B000100F76A51 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F36A47912F6D281800F76A51 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+		F36A48172F7B000100F76A51 /* FirebaseAppCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F36A47912F6D281800F76A51 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAppCheck;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

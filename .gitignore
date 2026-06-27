@@ -3,6 +3,7 @@
 
 # Local agent/editor configuration
 .codex/
+.zeref/
 
 # Xcode user/workspace state
 xcuserdata/
@@ -27,6 +28,13 @@ Packages/
 
 # CocoaPods generated dependencies, if added later
 Pods/
+
+# Node and Firebase emulator outputs
+node_modules/
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
 
 # Logs and local reports
 *.log

@@ -29,6 +29,12 @@ struct ProfileView: View {
             NavigationLink("Edit Profile") {
                 EditProfileView()
             }
+
+            if authVM.isDemoMode {
+                Button("Reset Demo") {
+                    authVM.resetDemo()
+                }
+            }
             
             Button(action: {
                 authVM.logout()

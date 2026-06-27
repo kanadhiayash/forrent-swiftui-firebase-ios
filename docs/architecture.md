@@ -4,8 +4,10 @@ For Rent uses a small MVVM structure that keeps SwiftUI views focused on renderi
 
 ## App Entry
 
-- `For Rent/ForRentApp.swift` configures Firebase and injects shared view models into the environment.
-- `For Rent/Views/RootView.swift` routes users based on authentication state and role.
+- `For Rent/ForRentApp.swift` resolves `AppEnvironment`, configures Firebase only
+  in clean mode, and injects shared view models.
+- `For Rent/Services/AppEnvironment.swift` treats the optional bundled
+  `DemoSeed.json` fixture as the single demo switch.
 - `For Rent/ContentView.swift` remains the app's primary content wrapper.
 
 ## Layers
@@ -17,7 +19,10 @@ For Rent uses a small MVVM structure that keeps SwiftUI views focused on renderi
 - `AppUser`: profile, role, contact details, and shortlist IDs.
 - `Property`: listing details, location, landlord owner ID, listing state, and assigned state.
 - `Request`: tenant-to-landlord request metadata.
-- `RequestStatus`: pending, accepted, or rejected.
+- `RequestStatus`: submitted, acknowledged, viewing scheduled, accepted,
+  rejected, cancelled, or expired.
+- `ListingV2`: versioned Canada-aware listing contract and legacy migration.
+- `Inquiry`: typed long-form inquiry lifecycle and allowed state transitions.
 - `Enums`: user roles and shared enum definitions.
 
 ### View Models
@@ -26,7 +31,8 @@ For Rent uses a small MVVM structure that keeps SwiftUI views focused on renderi
 
 - `AuthViewModel`: registration, login, logout, guest mode, profile loading, and profile updates.
 - `PropertyViewModel`: listed property browsing, landlord property inventory, create/update/delete/de-list actions.
-- `RequestViewModel`: request listeners, request creation, and accept/reject updates.
+- `RequestViewModel`: inquiry listeners, creation, role-aware state transitions,
+  and optimistic rollback.
 - `ShortlistViewModel`: saved-property state, Firestore shortlist updates, and local cache.
 
 ### Services
@@ -34,7 +40,10 @@ For Rent uses a small MVVM structure that keeps SwiftUI views focused on renderi
 `For Rent/Services/` wraps external and local persistence:
 
 - `AuthService`: Firebase Auth calls.
-- `FirestoreService`: Firestore queries, writes, listeners, and batched request/property updates.
+- `FirestoreService`: Firestore queries, writes, listeners, saved-listing
+  subcollections, and callable Functions.
+- `ListingMediaService`: Firebase Storage upload, download URL, and deletion.
+- `DemoSession`: in-memory demo records and deterministic reset.
 - `UserDefaultsManager`: lightweight local state.
 - `GoogleService-Info.example.plist`: safe Firebase plist template.
 
@@ -59,4 +68,10 @@ For Rent uses a small MVVM structure that keeps SwiftUI views focused on renderi
 
 ## Firebase Boundary
 
-Firebase-specific logic is concentrated in services and view models. Views should not directly construct Firestore writes. This keeps the UI easier to test and makes role/ownership rules easier to audit.
+Firebase-specific logic is concentrated in services and view models. Views do
+not construct Firestore writes. Listing publication and inquiry transitions go
+through callable Functions; Firestore rules deny direct inquiry updates and
+role escalation. Firebase Storage paths are resolved by `ListingImageView`.
+
+When the fixture is absent, the same app target compiles and launches in clean
+Firebase mode. No Xcode project change or remote cleanup is required.

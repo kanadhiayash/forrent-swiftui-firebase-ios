@@ -17,7 +17,8 @@
 4. Open a property detail screen.
 5. Save or remove the property from shortlist.
 6. Send a rental request.
-7. Track request status as pending, accepted, or rejected.
+7. Track the inquiry from submitted through acknowledgement, viewing,
+   acceptance, rejection, cancellation, or expiry.
 8. Update profile details from the profile screen.
 
 ## Landlord Flow
@@ -28,7 +29,8 @@
 4. Update listing details.
 5. List, de-list, or delete a property.
 6. Review incoming tenant requests.
-7. Accept or reject pending requests.
+7. Acknowledge inquiries, schedule viewings, and accept or reject eligible
+   inquiries.
 8. Accepted requests mark the related property as assigned and remove it from public browsing.
 
 ## Permission Expectations

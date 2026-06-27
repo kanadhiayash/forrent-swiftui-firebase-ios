@@ -13,22 +13,18 @@ struct TenantHomeView: View {
     @EnvironmentObject var authVM: AuthViewModel
     @EnvironmentObject var requestVM: RequestViewModel
     
-    @State private var searchText = ""
-    @State private var maxRent = ""
-    
     var body: some View {
         
-        NavigationStack {
-            
-            Group {
+        Group {
                 
                 // LOADING
                 if propertyVM.isLoading {
-                    
-                    VStack(spacing: 12) {
-                        ProgressView()
-                        Text("Loading properties...")
-                            .foregroundColor(.gray)
+                    ScrollView {
+                        LazyVStack(spacing: ForRentTheme.Spacing.md) {
+                            ForEach(0..<3, id: \.self) { _ in
+                                ListingSkeletonView()
+                            }
+                        }
                     }
                 }
                 
@@ -59,49 +55,16 @@ struct TenantHomeView: View {
                 }
                 
                 // DATA
-                else {
-                    let filteredProperties = propertyVM.filteredAvailableProperties(
-                        searchText: searchText,
-                        maxRent: Double(maxRent.trimmingCharacters(in: .whitespacesAndNewlines))
+                else if let user = authVM.user {
+                    MarketplaceResultsView(
+                        properties: propertyVM.availableProperties,
+                        user: user
                     )
-                    
-                    ScrollView {
-                        
-                        LazyVStack(spacing: 16) {
-                            VStack(spacing: 10) {
-                                TextField("Search rentals", text: $searchText)
-                                    .textFieldStyle(.roundedBorder)
-                                    .accessibilityLabel("Search rental listings")
-                                
-                                TextField("Maximum rent", text: $maxRent)
-                                    .keyboardType(.decimalPad)
-                                    .textFieldStyle(.roundedBorder)
-                                    .accessibilityLabel("Filter listings by maximum rent")
-                            }
-                            .padding(.horizontal)
-                            
-                            if filteredProperties.isEmpty {
-                                Text("No rentals match your filters")
-                                    .foregroundColor(.gray)
-                                    .padding(.top, 24)
-                            }
-                            
-                            ForEach(filteredProperties) { property in
-                                
-                                if let user = authVM.user {
-                                    NavigationLink {
-                                        PropertyDetailView(
-                                            property: property,
-                                            user: user
-                                        )
-                                    } label: {
-                                        PropertyCardView(property: property)
-                                    }
-                                    .buttonStyle(.plain)
-                                }
-                            }
-                        }
-                        .padding()
+                } else {
+                    ContentUnavailableView {
+                        Label("Sign in required", systemImage: "person.crop.circle.badge.exclamationmark")
+                    } description: {
+                        Text("Choose a renter account to browse and save rentals.")
                     }
                 }
             }
@@ -113,5 +76,4 @@ struct TenantHomeView: View {
                 requestVM.startListening(for: authVM.user)
             }
         }
-    }
 }

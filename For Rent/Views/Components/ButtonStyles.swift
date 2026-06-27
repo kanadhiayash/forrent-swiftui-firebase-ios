@@ -69,7 +69,7 @@ private struct StyledButton: View {
         switch kind {
         case .primary:
             guard isEnabled else { return ForRentTheme.Colors.surfaceStrong }
-            return configuration.isPressed ? ForRentTheme.Colors.primaryActive : ForRentTheme.Colors.primary
+            return configuration.isPressed ? ForRentTheme.Colors.actionActive : ForRentTheme.Colors.action
         case .secondary:
             return configuration.isPressed ? ForRentTheme.Colors.surfaceStrong : ForRentTheme.Colors.canvas
         }
