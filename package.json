@@ -9,7 +9,7 @@
   "devDependencies": {
     "@firebase/rules-unit-testing": "^5.0.1",
     "firebase": "^12.15.0",
-    "firebase-tools": "^15.22.0"
+    "firebase-tools": "^15.22.4"
   },
   "overrides": {
     "@opentelemetry/core": "^2.8.0",
