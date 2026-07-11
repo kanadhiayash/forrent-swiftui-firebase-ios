@@ -63,15 +63,6 @@ struct LocationSearchView: View {
     }
     
     private func coordinate(for item: MKMapItem) -> CLLocationCoordinate2D {
-        if #available(iOS 26.0, *) {
-            return item.location.coordinate
-        } else {
-            return legacyCoordinate(for: item)
-        }
-    }
-    
-    @available(iOS, introduced: 2.0, deprecated: 26.0)
-    private func legacyCoordinate(for item: MKMapItem) -> CLLocationCoordinate2D {
         item.placemark.coordinate
     }
 }

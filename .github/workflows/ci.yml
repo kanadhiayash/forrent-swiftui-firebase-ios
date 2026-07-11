@@ -32,12 +32,44 @@ jobs:
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v7
+      - name: Select iPhone simulator
+        id: simulator
+        shell: bash
+        run: |
+          set -euo pipefail
+          destination=$(
+            xcodebuild -showdestinations \
+              -project "For Rent.xcodeproj" \
+              -scheme "For Rent" 2>/dev/null |
+              awk '/platform:iOS Simulator/ && /name: ?iPhone/ {
+                if (match($0, /id: ?[A-Fa-f0-9-]+/)) {
+                  id = substr($0, RSTART, RLENGTH)
+                  sub(/^id: ?/, "", id)
+                  print "id=" id
+                }
+                exit
+              }'
+          )
+          if [[ -z "${destination}" ]]; then
+            destination=$(
+              xcrun simctl list devices available |
+                awk -F'[()]' '/iPhone/ {
+                  print "id=" $2
+                  exit
+                }'
+            )
+          fi
+          if [[ -z "${destination}" ]]; then
+            echo "No iPhone simulator destination found." >&2
+            exit 1
+          fi
+          echo "destination=${destination}" >> "${GITHUB_OUTPUT}"
       - name: Run unit tests
         run: >
           xcodebuild test
           -project "For Rent.xcodeproj"
           -scheme "For Rent"
-          -destination "platform=iOS Simulator,name=iPhone 16 Pro,OS=latest"
+          -destination "${{ steps.simulator.outputs.destination }}"
           -only-testing:"For RentTests"
           -parallel-testing-enabled NO
           CODE_SIGNING_ALLOWED=NO
@@ -47,12 +79,44 @@ jobs:
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v7
+      - name: Select iPhone simulator
+        id: simulator
+        shell: bash
+        run: |
+          set -euo pipefail
+          destination=$(
+            xcodebuild -showdestinations \
+              -project "For Rent.xcodeproj" \
+              -scheme "For Rent" 2>/dev/null |
+              awk '/platform:iOS Simulator/ && /name: ?iPhone/ {
+                if (match($0, /id: ?[A-Fa-f0-9-]+/)) {
+                  id = substr($0, RSTART, RLENGTH)
+                  sub(/^id: ?/, "", id)
+                  print "id=" id
+                }
+                exit
+              }'
+          )
+          if [[ -z "${destination}" ]]; then
+            destination=$(
+              xcrun simctl list devices available |
+                awk -F'[()]' '/iPhone/ {
+                  print "id=" $2
+                  exit
+                }'
+            )
+          fi
+          if [[ -z "${destination}" ]]; then
+            echo "No iPhone simulator destination found." >&2
+            exit 1
+          fi
+          echo "destination=${destination}" >> "${GITHUB_OUTPUT}"
       - name: Run guest marketplace smoke test
         run: >
           xcodebuild test
           -project "For Rent.xcodeproj"
           -scheme "For Rent"
-          -destination "platform=iOS Simulator,name=iPhone 16 Pro,OS=latest"
+          -destination "${{ steps.simulator.outputs.destination }}"
           -only-testing:"For RentUITests/ForRentSmokeTests/test_demoGuestCanOpenMarketplace"
           -parallel-testing-enabled NO
           CODE_SIGNING_ALLOWED=NO
