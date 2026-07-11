@@ -129,7 +129,6 @@ struct PropertyDetailView: View {
                 }
             } else {
                 imageCarousel
-                .tabViewStyle(.page)
             }
         }
         .frame(height: 280)
@@ -137,10 +136,16 @@ struct PropertyDetailView: View {
     }
 
     private var imageCarousel: some View {
-        TabView {
-            ForEach(property.imageNames, id: \.self) { imageName in
-                propertyImage(named: imageName)
+        GeometryReader { proxy in
+            ScrollView(.horizontal) {
+                HStack(spacing: 0) {
+                    ForEach(property.imageNames, id: \.self) { imageName in
+                        propertyImage(named: imageName)
+                            .frame(width: proxy.size.width, height: proxy.size.height)
+                    }
+                }
             }
+            .scrollIndicators(.hidden)
         }
     }
 
