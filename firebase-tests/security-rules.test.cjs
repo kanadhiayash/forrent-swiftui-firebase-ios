@@ -50,23 +50,41 @@ test.beforeEach(async () => {
       id: "landlord-a",
       email: "landlord@example.invalid",
       role: "landlord",
+      firstName: "Lane",
+      lastName: "Lord",
+      phone: "555-0101",
     });
     await setDoc(doc(db, "users", "tenant-a"), {
       id: "tenant-a",
       email: "tenant@example.invalid",
       role: "tenant",
+      firstName: "Tara",
+      lastName: "Tenant",
+      phone: "555-0102",
     });
     await setDoc(doc(db, "users", "tenant-b"), {
       id: "tenant-b",
       email: "other@example.invalid",
       role: "tenant",
+      firstName: "Owen",
+      lastName: "Other",
+      phone: "555-0103",
     });
     await setDoc(doc(db, "properties", "listing-a"), {
       id: "listing-a",
       landlordId: "landlord-a",
       title: "Public rental",
+      details: "A test rental.",
+      rent: 2200,
+      bedrooms: 2,
+      bathrooms: 1,
+      latitude: 43.6532,
+      longitude: -79.3832,
+      imageNames: [],
       isListed: true,
       isAssigned: false,
+      category: "personal_living",
+      pricingCadence: "monthly",
     });
   });
 });
@@ -88,6 +106,18 @@ test("users cannot escalate their account role", async () => {
   }));
 });
 
+test("users cannot inject undocumented profile fields", async () => {
+  const tenantDb = environment.authenticatedContext("tenant-a").firestore();
+
+  await assertFails(updateDoc(doc(tenantDb, "users", "tenant-a"), {
+    admin: true,
+  }));
+  await assertSucceeds(updateDoc(doc(tenantDb, "users", "tenant-a"), {
+    firstName: "Tara",
+    phone: "555-0199",
+  }));
+});
+
 test("only the owner can edit a listing", async () => {
   const ownerDb = environment.authenticatedContext("landlord-a").firestore();
   const otherDb = environment.authenticatedContext("tenant-b").firestore();
@@ -97,6 +127,12 @@ test("only the owner can edit a listing", async () => {
   }));
   await assertFails(updateDoc(doc(otherDb, "properties", "listing-a"), {
     title: "Unauthorized update",
+  }));
+  await assertFails(updateDoc(doc(ownerDb, "properties", "listing-a"), {
+    landlordId: "tenant-b",
+  }));
+  await assertFails(updateDoc(doc(ownerDb, "properties", "listing-a"), {
+    isAssigned: true,
   }));
 });
 
@@ -109,10 +145,42 @@ test("tenants can submit a valid inquiry but cannot change its status", async ()
     tenantId: "tenant-a",
     landlordId: "landlord-a",
     propertyId: "listing-a",
+    tenantName: "Tara",
+    tenantPhone: "555-0102",
     status: "submitted",
   }));
   await assertFails(updateDoc(inquiryRef, {
     status: "accepted",
+  }));
+});
+
+test("request creation denies bad ids, missing schema, and spoofed landlords", async () => {
+  const tenantDb = environment.authenticatedContext("tenant-a").firestore();
+
+  await assertFails(setDoc(doc(tenantDb, "requests", "custom-id"), {
+    id: "custom-id",
+    tenantId: "tenant-a",
+    landlordId: "landlord-a",
+    propertyId: "listing-a",
+    tenantName: "Tara",
+    tenantPhone: "555-0102",
+    status: "submitted",
+  }));
+  await assertFails(setDoc(doc(tenantDb, "requests", "tenant-a_listing-a"), {
+    id: "tenant-a_listing-a",
+    tenantId: "tenant-a",
+    landlordId: "landlord-a",
+    propertyId: "listing-a",
+    status: "submitted",
+  }));
+  await assertFails(setDoc(doc(tenantDb, "requests", "tenant-a_listing-a"), {
+    id: "tenant-a_listing-a",
+    tenantId: "tenant-a",
+    landlordId: "tenant-b",
+    propertyId: "listing-a",
+    tenantName: "Tara",
+    tenantPhone: "555-0102",
+    status: "submitted",
   }));
 });
 
