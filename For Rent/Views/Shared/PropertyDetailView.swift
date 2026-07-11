@@ -128,24 +128,36 @@ struct PropertyDetailView: View {
                     .foregroundStyle(ForRentTheme.Colors.muted)
                 }
             } else {
-                TabView {
-                    ForEach(property.imageNames, id: \.self) { imageName in
-                        ListingImageView(name: imageName) {
-                            ZStack {
-                                ForRentTheme.Colors.surfaceSoft
-                                Image(systemName: "photo")
-                                    .font(.largeTitle)
-                                    .foregroundStyle(ForRentTheme.Colors.muted)
-                            }
-                        }
-                            .clipped()
-                    }
-                }
+                imageCarousel
                 .tabViewStyle(.page)
             }
         }
         .frame(height: 280)
         .accessibilityHidden(true)
+    }
+
+    private var imageCarousel: some View {
+        TabView {
+            ForEach(property.imageNames, id: \.self) { imageName in
+                propertyImage(named: imageName)
+            }
+        }
+    }
+
+    private func propertyImage(named imageName: String) -> some View {
+        ListingImageView(name: imageName) {
+            imagePlaceholder
+        }
+        .clipped()
+    }
+
+    private var imagePlaceholder: some View {
+        ZStack {
+            ForRentTheme.Colors.surfaceSoft
+            Image(systemName: "photo")
+                .font(.largeTitle)
+                .foregroundStyle(ForRentTheme.Colors.muted)
+        }
     }
 
     @ViewBuilder
