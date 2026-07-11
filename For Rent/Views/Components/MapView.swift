@@ -15,13 +15,18 @@ struct MapView: View {
     
     var body: some View {
         
-        Map {
-            Marker("Property", coordinate: CLLocationCoordinate2D(
-                latitude: latitude,
-                longitude: longitude
-            ))
-        }
+        Map(coordinateRegion: .constant(region))
         .frame(height: 200)
         .cornerRadius(12)
+    }
+
+    private var region: MKCoordinateRegion {
+        MKCoordinateRegion(
+            center: CLLocationCoordinate2D(
+                latitude: latitude,
+                longitude: longitude
+            ),
+            span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+        )
     }
 }

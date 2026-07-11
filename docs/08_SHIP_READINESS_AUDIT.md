@@ -4,7 +4,10 @@
 
 Status: **Portfolio ship-ready with documented limitations**
 
-For Rent is ready to publish as a GitHub portfolio project after screenshots are added. It is not yet App Store production-ready because it still needs automated tests, Firebase emulator rule validation, and cloud image storage.
+For Rent is ready to publish as a GitHub portfolio project after real simulator
+screenshots are added. It is not App Store production-ready because it still
+needs production Firebase deployment review, cloud image storage, analytics,
+monitoring, privacy/legal review, and release operations.
 
 ## Launch Gates Passed
 
@@ -20,24 +23,34 @@ For Rent is ready to publish as a GitHub portfolio project after screenshots are
 - Private Firebase config is ignored by Git.
 - Public Firebase setup and data model docs are present.
 - A baseline `firestore.rules` file is included.
+- Swift unit tests cover demo validation, property filtering, role guards,
+  duplicate request prevention, request acceptance, shortlist rollback, and
+  deterministic reset.
+- Firebase emulator tests validate user/property/request ownership boundaries
+  and role-escalation denial.
+- GitHub Actions runs simulator build, unit tests, UI smoke tests, Firebase
+  emulator tests, secret scan, and demo fixture validation.
 
 ## Launch Gates Still Manual
 
 - Run tenant, landlord, and guest flows in Xcode with real Firebase test accounts.
-- Deploy or emulator-test `firestore.rules`.
-- Add screenshots to the README.
+- Deploy Firebase resources only after owner approval and environment review.
+- Add real simulator screenshots to the README.
 - Confirm Firebase indexes if Firestore asks for composite indexes during real queries.
 
 ## Remaining Non-Blocking Risks
 
 - Property images are stored locally, so they do not sync across devices.
-- There is no automated unit or UI test target yet.
-- Firestore rules are included but have not been validated with the Firebase emulator.
-- The app is portfolio-grade, not production-grade, until storage, tests, analytics, and operational monitoring exist.
+- Automated tests cover the critical demo, rules, and smoke paths, but do not
+  replace a full real-Firebase manual walkthrough.
+- The app is portfolio-grade, not production-grade, until storage, analytics,
+  privacy/legal review, monitoring, incident response, and release operations
+  exist.
 
 ## Recommended Pre-Figma Notes
 
 - Treat the current SwiftUI screens as the functional source of truth.
 - Preserve the landlord, tenant, and guest journeys.
 - Design states for loading, empty, error, pending, accepted, rejected, listed, de-listed, assigned, and unavailable.
-- Include README screenshots after the Figma pass or simulator polish pass.
+- Include README screenshots only after the simulator capture checklist in
+  `docs/09_DEMO_CAPTURE_PACK.md` is complete.

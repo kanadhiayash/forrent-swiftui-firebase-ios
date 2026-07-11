@@ -40,8 +40,9 @@ that deleting the fixture is sufficient for clean Firebase mode.
 
 ## Manual product QA
 
-Review compact iPhone, iPhone 17 Pro, and iPad layouts in light and dark mode.
-For each, check:
+Use `docs/09_DEMO_CAPTURE_PACK.md` as the capture-ready manual script. At
+minimum, review compact iPhone, iPhone 17 Pro, and iPad layouts in light and
+dark mode. For each, check:
 
 - Default and accessibility Dynamic Type sizes.
 - VoiceOver labels and reading order.

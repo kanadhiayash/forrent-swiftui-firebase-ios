@@ -9,7 +9,8 @@
 - [x] Document Firestore data model.
 - [x] Avoid committing service account files or private keys.
 - [x] Confirm real `GoogleService-Info.plist` is ignored after Git is initialized.
-- [ ] Add screenshots.
+- [ ] Add real screenshots captured from the current app.
+- [x] Add demo capture and manual QA checklist.
 - [x] Add MIT license.
 
 ## Files Safe To Commit
@@ -73,3 +74,9 @@ For Rent is a SwiftUI rental app portfolio project demonstrating Firebase Auth, 
 ## Recommended Portfolio Case-Study Link Placeholder
 
 `https://your-portfolio.com/forrent-swiftui-firebase-ios`
+
+## Screenshot Rule
+
+Use `docs/09_DEMO_CAPTURE_PACK.md` before adding README images. Screenshot and
+video paths should stay absent or clearly pending until real simulator media has
+been captured from the current app.
