@@ -107,6 +107,16 @@ Remote branch and tag rules are documented in
 `docs/GITHUB_PROTECTION.md`. Applying rulesets, pushing, merging, deploying
 Firebase resources, tagging, and releasing remain owner-approved actions.
 
+## Demo capture
+
+Use `docs/09_DEMO_CAPTURE_PACK.md` before recording or adding screenshots. That
+pack lists the pre-capture gates, manual guest/renter/landlord QA script, and
+the screenshot checklist.
+
+No README screenshot, demo video, production claim, deployment link, App Store
+claim, or metric should be added until it is captured or verified from the
+current app.
+
 ## Local Zeref OS
 
 The optional `.zeref/` clone is ignored. The tested commit and privacy-first
@@ -119,3 +129,4 @@ setup are recorded in `docs/ZEREF_OS_SETUP.md`.
 - `docs/architecture.md`: boundaries and data flow
 - `docs/05_TESTING_AND_VERIFICATION.md`: evidence and QA matrix
 - `docs/GITHUB_PROTECTION.md`: required remote repository settings
+- `docs/09_DEMO_CAPTURE_PACK.md`: demo recording and screenshot checklist
