@@ -26,6 +26,8 @@ struct PropertyDetailView: View {
 
                 VStack(alignment: .leading, spacing: ForRentTheme.Spacing.lg) {
                     VStack(alignment: .leading, spacing: ForRentTheme.Spacing.xs) {
+                        availabilityChip
+
                         Text(property.title)
                             .font(.title.bold())
                             .foregroundStyle(ForRentTheme.Colors.ink)
@@ -39,10 +41,7 @@ struct PropertyDetailView: View {
                             .foregroundStyle(ForRentTheme.Colors.primary)
                     }
 
-                    HStack(spacing: ForRentTheme.Spacing.xs) {
-                        detailFact("\(property.bedrooms) bedrooms", icon: "bed.double.fill")
-                        detailFact("\(property.bathrooms) bathrooms", icon: "bathtub.fill")
-                    }
+                    detailFacts
 
                     VStack(alignment: .leading, spacing: ForRentTheme.Spacing.xs) {
                         Text("About this rental")
@@ -120,10 +119,12 @@ struct PropertyDetailView: View {
                 ZStack {
                     ForRentTheme.Colors.surfaceSoft
                     VStack(spacing: ForRentTheme.Spacing.xs) {
-                        Image(systemName: "photo")
+                        Image(systemName: "building.2.crop.circle")
                             .font(.largeTitle)
-                        Text("Property photos unavailable")
+                        Text("\(property.category.title) preview unavailable")
                             .font(.headline)
+                        Text(property.resolvedLocationName)
+                            .font(.subheadline)
                     }
                     .foregroundStyle(ForRentTheme.Colors.muted)
                 }
@@ -159,9 +160,53 @@ struct PropertyDetailView: View {
     private var imagePlaceholder: some View {
         ZStack {
             ForRentTheme.Colors.surfaceSoft
-            Image(systemName: "photo")
-                .font(.largeTitle)
-                .foregroundStyle(ForRentTheme.Colors.muted)
+            VStack(spacing: ForRentTheme.Spacing.xs) {
+                Image(systemName: "photo")
+                    .font(.largeTitle)
+                Text("Image unavailable")
+                    .font(.caption.weight(.semibold))
+            }
+            .foregroundStyle(ForRentTheme.Colors.muted)
+        }
+    }
+
+    private var detailFacts: some View {
+        LazyVGrid(
+            columns: [GridItem(.adaptive(minimum: 142), spacing: ForRentTheme.Spacing.xs)],
+            alignment: .leading,
+            spacing: ForRentTheme.Spacing.xs
+        ) {
+            detailFact("\(property.bedrooms) bedrooms", icon: "bed.double.fill")
+            detailFact("\(property.bathrooms) bathrooms", icon: "bathtub.fill")
+            detailFact(property.category.title, icon: "square.grid.2x2.fill")
+            detailFact(property.resolvedPricingCadence.title, icon: "calendar")
+
+            if let maxGuests = property.resolvedMaxGuests {
+                detailFact("Up to \(maxGuests) guests", icon: "person.2.fill")
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var availabilityChip: some View {
+        if let request = activeRequest {
+            StatusChip(
+                title: "Inquiry \(request.status.title.lowercased())",
+                systemImage: "bubble.left.and.text.bubble.right.fill",
+                tone: request.status == .accepted ? .success : .info
+            )
+        } else if property.isListed && !property.isAssigned {
+            StatusChip(
+                title: "Available",
+                systemImage: "checkmark.seal.fill",
+                tone: .success
+            )
+        } else {
+            StatusChip(
+                title: "Unavailable",
+                systemImage: "lock.fill",
+                tone: .neutral
+            )
         }
     }
 
@@ -169,9 +214,7 @@ struct PropertyDetailView: View {
     private var inquiryAction: some View {
         VStack(spacing: ForRentTheme.Spacing.xs) {
             if user.role == .tenant {
-                if let request = requestVM.requests.first(where: {
-                    $0.propertyId == property.id && $0.tenantId == user.id
-                }) {
+                if let request = activeRequest {
                     StatusChip(
                         title: "Inquiry \(request.status.title.lowercased())",
                         systemImage: "bubble.left.and.text.bubble.right.fill",
@@ -199,9 +242,17 @@ struct PropertyDetailView: View {
         .background(.bar)
     }
 
+    private var activeRequest: Request? {
+        requestVM.requests.first {
+            $0.propertyId == property.id && $0.tenantId == user.id
+        }
+    }
+
     private func detailFact(_ title: String, icon: String) -> some View {
         Label(title, systemImage: icon)
             .font(.subheadline.weight(.medium))
+            .lineLimit(1)
+            .minimumScaleFactor(0.88)
             .padding(.horizontal, ForRentTheme.Spacing.sm)
             .padding(.vertical, ForRentTheme.Spacing.xs)
             .background(ForRentTheme.Colors.surfaceSoft)
