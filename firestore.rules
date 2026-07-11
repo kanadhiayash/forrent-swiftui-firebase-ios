@@ -22,10 +22,102 @@ service cloud.firestore {
       return isSignedIn() && currentRole() == "landlord";
     }
 
+    function userRequiredKeys() {
+      return ["id", "email", "role", "firstName", "lastName", "phone"];
+    }
+
+    function userOptionalKeys() {
+      return ["shortlisted"];
+    }
+
+    function userAllowedKeys() {
+      return userRequiredKeys().concat(userOptionalKeys());
+    }
+
+    function immutableUserFields(userId) {
+      return request.resource.data.id == userId &&
+        request.resource.data.email == resource.data.email &&
+        request.resource.data.role == resource.data.role;
+    }
+
+    function propertyRequiredKeys() {
+      return [
+        "id",
+        "title",
+        "details",
+        "rent",
+        "bedrooms",
+        "bathrooms",
+        "latitude",
+        "longitude",
+        "imageNames",
+        "landlordId",
+        "isListed",
+        "isAssigned",
+        "category",
+        "pricingCadence"
+      ];
+    }
+
+    function propertyOptionalKeys() {
+      return ["locationName", "amenities", "maxGuests"];
+    }
+
+    function propertyAllowedKeys() {
+      return propertyRequiredKeys().concat(propertyOptionalKeys());
+    }
+
+    function requestRequiredKeys() {
+      return [
+        "id",
+        "propertyId",
+        "landlordId",
+        "tenantId",
+        "tenantName",
+        "tenantPhone",
+        "status"
+      ];
+    }
+
+    function requestOptionalKeys() {
+      return [
+        "intent",
+        "tenantEmail",
+        "partySize",
+        "message",
+        "preferredViewingDate",
+        "startDate",
+        "endDate",
+        "createdAt",
+        "updatedAt",
+        "decisionAt"
+      ];
+    }
+
+    function requestAllowedKeys() {
+      return requestRequiredKeys().concat(requestOptionalKeys());
+    }
+
+    function validRequestStatus(status) {
+      return status in [
+        "submitted",
+        "acknowledged",
+        "viewing_scheduled",
+        "accepted",
+        "rejected",
+        "cancelled",
+        "expired"
+      ];
+    }
+
     match /users/{userId} {
       allow create: if
         isSignedIn() &&
         request.auth.uid == userId &&
+        request.resource.data.keys().hasAll(userRequiredKeys()) &&
+        request.resource.data.keys().hasOnly(userAllowedKeys()) &&
+        request.resource.data.id == userId &&
+        request.resource.data.email is string &&
         request.resource.data.role in ["tenant", "landlord"];
 
       allow read: if isSignedIn() && request.auth.uid == userId;
@@ -33,9 +125,15 @@ service cloud.firestore {
       allow update: if
         isSignedIn() &&
         request.auth.uid == userId &&
-        request.resource.data.role == resource.data.role &&
-        request.resource.data.id == resource.data.id &&
-        request.resource.data.email == resource.data.email;
+        request.resource.data.keys().hasAll(userRequiredKeys()) &&
+        request.resource.data.keys().hasOnly(userAllowedKeys()) &&
+        immutableUserFields(userId) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "firstName",
+          "lastName",
+          "phone",
+          "shortlisted"
+        ]);
 
       allow delete: if false;
 
@@ -52,6 +150,9 @@ service cloud.firestore {
 
       allow create: if
         isLandlord() &&
+        request.resource.data.keys().hasAll(propertyRequiredKeys()) &&
+        request.resource.data.keys().hasOnly(propertyAllowedKeys()) &&
+        request.resource.data.id == propertyId &&
         request.resource.data.landlordId == request.auth.uid &&
         request.resource.data.isListed == false &&
         request.resource.data.isAssigned == false;
@@ -59,8 +160,11 @@ service cloud.firestore {
       allow update: if
         isLandlord() &&
         resource.data.landlordId == request.auth.uid &&
+        request.resource.data.keys().hasAll(propertyRequiredKeys()) &&
+        request.resource.data.keys().hasOnly(propertyAllowedKeys()) &&
         request.resource.data.landlordId == resource.data.landlordId &&
         request.resource.data.id == resource.data.id &&
+        request.resource.data.isAssigned == resource.data.isAssigned &&
         (
           request.resource.data.isListed == resource.data.isListed ||
           request.resource.data.isListed == false
@@ -89,8 +193,12 @@ service cloud.firestore {
 
       allow create: if
         isTenant() &&
+        request.resource.data.keys().hasAll(requestRequiredKeys()) &&
+        request.resource.data.keys().hasOnly(requestAllowedKeys()) &&
+        request.resource.data.id == requestId &&
         request.resource.data.tenantId == request.auth.uid &&
         request.resource.data.status == "submitted" &&
+        validRequestStatus(request.resource.data.status) &&
         requestId == request.auth.uid + "_" + request.resource.data.propertyId &&
         exists(/databases/$(database)/documents/properties/$(request.resource.data.propertyId)) &&
         get(/databases/$(database)/documents/properties/$(request.resource.data.propertyId)).data.landlordId ==
