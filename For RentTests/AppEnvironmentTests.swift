@@ -36,6 +36,56 @@ final class AppEnvironmentTests: XCTestCase {
         XCTAssertNil(environment.demoSession)
     }
 
+    func test_signupValidationRejectsDocumentedInvalidInputs() throws {
+        XCTAssertThrowsError(try Validators.validateSignup(
+            email: "",
+            password: "secret1",
+            confirmPassword: "secret1",
+            firstName: "Olivia",
+            lastName: "Chen"
+        )) { error in
+            XCTAssertEqual(error as? AppError, .emptyFields)
+        }
+
+        XCTAssertThrowsError(try Validators.validateSignup(
+            email: "tenant.example.invalid",
+            password: "secret1",
+            confirmPassword: "secret1",
+            firstName: "Olivia",
+            lastName: "Chen"
+        )) { error in
+            XCTAssertEqual(error as? AppError, .invalidEmail)
+        }
+
+        XCTAssertThrowsError(try Validators.validateSignup(
+            email: "tenant@example.invalid",
+            password: "short",
+            confirmPassword: "short",
+            firstName: "Olivia",
+            lastName: "Chen"
+        )) { error in
+            XCTAssertEqual(error as? AppError, .weakPassword)
+        }
+
+        XCTAssertThrowsError(try Validators.validateSignup(
+            email: "tenant@example.invalid",
+            password: "secret1",
+            confirmPassword: "secret2",
+            firstName: "Olivia",
+            lastName: "Chen"
+        )) { error in
+            XCTAssertEqual(error as? AppError, .passwordMismatch)
+        }
+
+        XCTAssertNoThrow(try Validators.validateSignup(
+            email: "tenant@example.invalid",
+            password: "secret1",
+            confirmPassword: "secret1",
+            firstName: "Olivia",
+            lastName: "Chen"
+        ))
+    }
+
     @MainActor
     func test_authViewModelSelectsDemoAccountWithoutFirebaseCredentials() async throws {
         let seed = try DemoSeed.decode(data: fixtureData())
@@ -47,6 +97,100 @@ final class AppEnvironmentTests: XCTestCase {
 
         XCTAssertEqual(authViewModel.user?.id, seed.personas.landlord.id)
         XCTAssertEqual(authViewModel.user?.role, .landlord)
+    }
+
+    @MainActor
+    func test_propertyViewModelFiltersAvailableDemoListings() async throws {
+        let seed = try DemoSeed.decode(data: fixtureData())
+        let propertyViewModel = PropertyViewModel(environment: .demo(seed: seed))
+
+        await propertyViewModel.fetchProperties(for: seed.personas.tenant)
+
+        let bikeListings = propertyViewModel.filteredAvailableProperties(
+            searchText: "bike",
+            maxRent: nil
+        )
+        let lowerRentListings = propertyViewModel.filteredAvailableProperties(
+            searchText: "  canada  ",
+            maxRent: 2_000
+        )
+
+        XCTAssertEqual(bikeListings.map(\.id), ["listing-vancouver-studio"])
+        XCTAssertTrue(lowerRentListings.allSatisfy { $0.rent <= 2_000 })
+        XCTAssertFalse(lowerRentListings.contains { $0.isAssigned || !$0.isListed })
+    }
+
+    @MainActor
+    func test_requestViewModelBlocksGuestAndDuplicateRequests() async throws {
+        let seed = try DemoSeed.decode(data: fixtureData())
+        let requestViewModel = RequestViewModel(environment: .demo(seed: seed))
+        let existingRequestProperty = try XCTUnwrap(seed.properties.first {
+            $0.id == "listing-toronto-loft"
+        })
+
+        await requestViewModel.sendRequest(
+            property: existingRequestProperty,
+            user: seed.personas.guest
+        )
+        XCTAssertEqual(
+            requestViewModel.errorMessage,
+            "Please sign in as a tenant to send rental requests."
+        )
+
+        requestViewModel.startListening(for: seed.personas.tenant)
+        await requestViewModel.sendRequest(
+            property: existingRequestProperty,
+            user: seed.personas.tenant
+        )
+
+        XCTAssertEqual(
+            requestViewModel.errorMessage,
+            "You already sent a request for this property."
+        )
+    }
+
+    @MainActor
+    func test_demoAcceptRequestAssignsAndUnlistsProperty() async throws {
+        let seed = try DemoSeed.decode(data: fixtureData())
+        let environment = AppEnvironment.demo(seed: seed)
+        let propertyViewModel = PropertyViewModel(environment: environment)
+        let requestViewModel = RequestViewModel(environment: environment)
+
+        requestViewModel.startListening(for: seed.personas.landlord)
+        let request = try XCTUnwrap(requestViewModel.requests.first {
+            $0.id == "demo-tenant-olivia_listing-calgary-suite"
+        })
+
+        await requestViewModel.accept(request, currentUser: seed.personas.landlord)
+        await propertyViewModel.fetchProperties(for: seed.personas.landlord)
+
+        XCTAssertEqual(
+            requestViewModel.requests.first { $0.id == request.id }?.status,
+            .accepted
+        )
+
+        let assignedProperty = try XCTUnwrap(propertyViewModel.properties.first {
+            $0.id == "listing-calgary-suite"
+        })
+        XCTAssertTrue(assignedProperty.isAssigned)
+        XCTAssertFalse(assignedProperty.isListed)
+    }
+
+    @MainActor
+    func test_shortlistToggleRemovesAndRestoresDemoListing() async throws {
+        let seed = try DemoSeed.decode(data: fixtureData())
+        let shortlistViewModel = ShortlistViewModel(environment: .demo(seed: seed))
+        let userId = seed.personas.tenant.id
+        let propertyId = "listing-toronto-loft"
+
+        await shortlistViewModel.loadFromFirestore(userId: userId)
+        XCTAssertTrue(shortlistViewModel.isSaved(propertyId))
+
+        await shortlistViewModel.toggle(propertyId: propertyId, userId: userId)
+        XCTAssertFalse(shortlistViewModel.isSaved(propertyId))
+
+        await shortlistViewModel.toggle(propertyId: propertyId, userId: userId)
+        XCTAssertTrue(shortlistViewModel.isSaved(propertyId))
     }
 
     @MainActor
