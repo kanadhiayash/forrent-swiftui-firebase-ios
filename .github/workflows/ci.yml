@@ -41,18 +41,24 @@ jobs:
             xcodebuild -showdestinations \
               -project "For Rent.xcodeproj" \
               -scheme "For Rent" 2>/dev/null |
-              awk '/platform:iOS Simulator/ && /name:iPhone/ {
-                for (i = 1; i <= NF; i++) {
-                  if ($i ~ /^id:/) {
-                    sub(/^id:/, "", $i)
-                    sub(/,$/, "", $i)
-                    print "id=" $i
-                    exit
-                  }
+              awk '/platform:iOS Simulator/ && /name: ?iPhone/ {
+                if (match($0, /id: ?[A-Fa-f0-9-]+/)) {
+                  id = substr($0, RSTART, RLENGTH)
+                  sub(/^id: ?/, "", id)
+                  print "id=" id
                 }
                 exit
               }'
           )
+          if [[ -z "${destination}" ]]; then
+            destination=$(
+              xcrun simctl list devices available |
+                awk -F'[()]' '/iPhone/ {
+                  print "id=" $2
+                  exit
+                }'
+            )
+          fi
           if [[ -z "${destination}" ]]; then
             echo "No iPhone simulator destination found." >&2
             exit 1
@@ -82,18 +88,24 @@ jobs:
             xcodebuild -showdestinations \
               -project "For Rent.xcodeproj" \
               -scheme "For Rent" 2>/dev/null |
-              awk '/platform:iOS Simulator/ && /name:iPhone/ {
-                for (i = 1; i <= NF; i++) {
-                  if ($i ~ /^id:/) {
-                    sub(/^id:/, "", $i)
-                    sub(/,$/, "", $i)
-                    print "id=" $i
-                    exit
-                  }
+              awk '/platform:iOS Simulator/ && /name: ?iPhone/ {
+                if (match($0, /id: ?[A-Fa-f0-9-]+/)) {
+                  id = substr($0, RSTART, RLENGTH)
+                  sub(/^id: ?/, "", id)
+                  print "id=" id
                 }
                 exit
               }'
           )
+          if [[ -z "${destination}" ]]; then
+            destination=$(
+              xcrun simctl list devices available |
+                awk -F'[()]' '/iPhone/ {
+                  print "id=" $2
+                  exit
+                }'
+            )
+          fi
           if [[ -z "${destination}" ]]; then
             echo "No iPhone simulator destination found." >&2
             exit 1
