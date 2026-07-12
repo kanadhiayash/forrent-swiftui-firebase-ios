@@ -1,0 +1,30 @@
+{
+  "brand": {
+    "name": "FOR RENT",
+    "concept": "The Question Mark Home",
+    "version": "1.0",
+    "tagline": "Find your answer. Find your place."
+  },
+  "color": {
+    "navy": {
+      "value": "#0A1A3A",
+      "role": "Wordmark, dark surfaces, primary text"
+    },
+    "royalBlue": {
+      "value": "#2563EB",
+      "role": "Primary symbol, actions, active states"
+    },
+    "teal": {
+      "value": "#10B981",
+      "role": "Availability, success, supporting accent"
+    },
+    "lightGray": {
+      "value": "#F2F4F7",
+      "role": "Quiet surfaces and dividers"
+    },
+    "white": {
+      "value": "#FFFFFF",
+      "role": "Light surface and reversed artwork"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <title>For Rent - The Question Mark Home</title>
+  
+  
+    <g aria-label="The Question Mark Home symbol">
+      <path
+        d="M 266 654
+           L 266 390
+           Q 266 348 300 320
+           L 470 178
+           Q 512 143 554 178
+           L 724 320
+           Q 758 348 758 390
+           L 758 525
+           C 758 648 674 732 560 732
+           L 526 732"
+        fill="none"
+        stroke="#2563EB"
+        stroke-width="104"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+      <rect x="417" y="394" width="72" height="72" rx="14" fill="#2563EB"/>
+      <rect x="535" y="394" width="72" height="72" rx="14" fill="#2563EB"/>
+      <rect x="417" y="512" width="72" height="72" rx="14" fill="#2563EB"/>
+      <rect x="535" y="512" width="72" height="72" rx="14" fill="#2563EB"/>
+      <circle cx="526" cy="866" r="54" fill="#2563EB"/>
+    </g>
+    
+</svg>
