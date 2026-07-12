@@ -6,30 +6,36 @@ For Rent is a restrained, high-trust iOS product. Use Apple-native interaction p
 
 ## Color
 
-### Core
+### Brand Primitives
 
-- Trust blue `primary`: `#003580`
-- Trust blue active `primaryActive`: `#00224F`
-- Action blue `action`: `#0071C2`
-- Action blue active `actionActive`: `#005999`
-- Highlight yellow `yellow`: `#FFB700`, always with dark text
-- `ink`: `#1A1A1A`
-- `body`: `#474747`
-- `muted`: `#6B6B6B`
-- `canvas`: `#FFFFFF`
-- `surfaceSoft`: `#F8FAFC`
-- `surfaceStrong`: `#E0E2E6`
-- `hairline`: `#DDDDDD`
-- `borderStrong`: `#9297A0`
+- Navy `BrandNavy`: `#0A1A3A`
+- Royal Blue `BrandRoyalBlue`: `#2563EB`
+- Teal `BrandTeal`: `#10B981`
+- Light Gray `BrandLightGray`: `#F2F4F7`
+- White `BrandWhite`: `#FFFFFF`
 
-### Semantic
+### Semantic Tokens
 
-- Brand surfaces use trust blue. Primary task buttons use action blue.
-- Destructive emphasis uses semantic red with a text label or icon.
-- Confirmed and available states use semantic green with text or icon.
-- Pending states use highlight yellow with dark text.
-- Informational links use action blue.
+- `AppCanvas`, `AppSurface`, `AppSurfaceSubtle`, `AppSurfaceRaised`, and `AppSurfaceSelected` define app backgrounds and grouped surfaces for light and dark appearances.
+- `AppTextPrimary`, `AppTextSecondary`, and `AppTextMuted` define text hierarchy.
+- `AppBorder` and `AppSeparator` define structure.
+- `AppActionPrimary`, `AppActionPressed`, `AppLink`, and `AppFocus` define interactive emphasis.
+- `AppSuccess`, `AppWarning`, and `AppDestructive` families define status and feedback.
+- Royal Blue is the primary action and active tint.
+- Navy is primary text and high-trust dark surface color.
+- Teal is reserved for success and availability, not the main action color.
 - Color never carries status by itself.
+- Feature views and components must use semantic tokens rather than direct hex values.
+- Compatibility aliases in `ForRentTheme.Colors` exist only to keep older screens compiling during migration. New code must use semantic names.
+
+### Brand Assets
+
+- Runtime assets live in the existing `Assets.xcassets` catalog as `BrandSymbol`, `BrandLogoHorizontal`, brand primitive colorsets, semantic colorsets, `AccentColor`, and `AppIcon`.
+- The app icon uses the approved Question Mark Home artwork. Keep one `AppIcon.appiconset`; do not add duplicate app icon assets.
+- Default, dark, and tinted app-icon variants may be used only through Xcode-supported appearance slots.
+- The source-of-truth brand guide, SVGs, token JSON, and app-icon masters live under `docs/brand`.
+- Do not redraw, trace, crop, recolor, stretch, add effects to, or regenerate the approved mark.
+- Maintain clear space around the logo and avoid placing it inside busy imagery or low-contrast surfaces.
 
 ## Typography
 
