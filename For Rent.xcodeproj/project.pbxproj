@@ -32,6 +32,7 @@
 		F36A48552F96000100F76A51 /* ViewingSchedulePresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48542F96000100F76A51 /* ViewingSchedulePresentationTests.swift */; };
 		F36A48572F97000100F76A51 /* PostViewingDecisionPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48562F97000100F76A51 /* PostViewingDecisionPresentationTests.swift */; };
 		F36A48592F98000100F76A51 /* OfferPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48582F98000100F76A51 /* OfferPresentationTests.swift */; };
+		F36A485B2F99000100F76A51 /* AgreementPreparationPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A485A2F99000100F76A51 /* AgreementPreparationPresentationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 		F36A48542F96000100F76A51 /* ViewingSchedulePresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewingSchedulePresentationTests.swift; sourceTree = "<group>"; };
 		F36A48562F97000100F76A51 /* PostViewingDecisionPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewingDecisionPresentationTests.swift; sourceTree = "<group>"; };
 		F36A48582F98000100F76A51 /* OfferPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferPresentationTests.swift; sourceTree = "<group>"; };
+		F36A485A2F99000100F76A51 /* AgreementPreparationPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgreementPreparationPresentationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -157,6 +159,7 @@
 				F36A48542F96000100F76A51 /* ViewingSchedulePresentationTests.swift */,
 				F36A48562F97000100F76A51 /* PostViewingDecisionPresentationTests.swift */,
 				F36A48582F98000100F76A51 /* OfferPresentationTests.swift */,
+				F36A485A2F99000100F76A51 /* AgreementPreparationPresentationTests.swift */,
 			);
 			path = "For RentTests";
 			sourceTree = "<group>";
@@ -341,6 +344,7 @@
 				F36A48552F96000100F76A51 /* ViewingSchedulePresentationTests.swift in Sources */,
 				F36A48572F97000100F76A51 /* PostViewingDecisionPresentationTests.swift in Sources */,
 				F36A48592F98000100F76A51 /* OfferPresentationTests.swift in Sources */,
+				F36A485B2F99000100F76A51 /* AgreementPreparationPresentationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
