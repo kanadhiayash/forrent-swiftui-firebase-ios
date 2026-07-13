@@ -40,13 +40,12 @@ struct LandlordTabView: View {
                 Label("Requests", systemImage: "bubble.left.and.bubble.right")
             }
             
-            // MARK: PROFILE
+            // MARK: ACCOUNT
             NavigationStack {
-                ProfileView()
-                    .navigationTitle("Profile")
+                AccountView()
             }
             .tabItem {
-                Label("Profile", systemImage: "person")
+                Label("Account", systemImage: "person.crop.circle")
             }
         }
     }
