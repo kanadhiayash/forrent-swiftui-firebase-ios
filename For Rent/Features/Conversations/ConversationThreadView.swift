@@ -166,6 +166,14 @@ struct ConversationThreadView: View {
                 }
                 .buttonStyle(ForRentSecondaryButtonStyle())
             }
+        } else if authVM.user?.role == .tenant, request.status == .accepted {
+            NavigationLink {
+                OfferComposerView(requestId: request.id, propertyId: request.propertyId)
+            } label: {
+                Label("Create structured offer", systemImage: "doc.text.fill")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(ForRentPrimaryButtonStyle())
         } else if authVM.user?.role == .tenant,
                   request.status.canTransition(to: .cancelled) {
             Button(role: .destructive) {
