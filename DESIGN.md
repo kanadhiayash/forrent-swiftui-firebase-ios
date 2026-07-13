@@ -86,6 +86,15 @@ For Rent is a restrained, high-trust iOS product. Use Apple-native interaction p
 - Validate near the field and summarize blocking errors before submission.
 - Preserve entered data after recoverable failures.
 
+### Account And Profile
+
+- Account is a role-shell destination named `Account`, not `Profile`.
+- Start with a compact identity header that shows name, role, email, optional phone, and readable initials when no image is available.
+- Group account actions by user intent: personal information, support/trust, demo utilities, and session controls.
+- Personal Details is the only editable profile flow in this slice. Keep email read-only until account email change has its own verified auth flow.
+- Invalid profile saves must show inline field errors instead of relying on silent disabled buttons.
+- Destructive or data-reset actions require native confirmation alerts with clear labels.
+
 ### Navigation
 
 - One `NavigationStack` owner per tab.
