@@ -43,6 +43,20 @@ struct AccountView: View {
                     )
                     .accessibilityIdentifier("account.email")
                 }
+
+                Section("Market") {
+                    NavigationLink {
+                        MarketQualificationView()
+                    } label: {
+                        AccountNavigationRow(
+                            icon: "checkmark.seal",
+                            title: "Market qualification",
+                            value: nil,
+                            supportingText: "Track release evidence before owner review"
+                        )
+                    }
+                    .accessibilityIdentifier("account.marketQualification")
+                }
             }
 
             if authVM.isDemoMode {
