@@ -17,6 +17,7 @@ import Combine
 @MainActor
 class AuthViewModel: ObservableObject {
     private let environment: AppEnvironment
+    private let profileStore: ProfileStore
     
     @Published var user: AppUser? = nil
     @Published var errorMessage: String?
@@ -43,11 +44,16 @@ class AuthViewModel: ObservableObject {
         environment.demoSession?.demoUsers ?? []
     }
 
-    init(environment: AppEnvironment? = nil) {
+    init(
+        environment: AppEnvironment? = nil,
+        profileStore: ProfileStore? = nil,
+        observesAuthState: Bool = true
+    ) {
         let resolvedEnvironment = environment ?? .firebase
         self.environment = resolvedEnvironment
+        self.profileStore = profileStore ?? FirestoreProfileStore()
 
-        guard resolvedEnvironment.isFirebase else { return }
+        guard resolvedEnvironment.isFirebase, observesAuthState else { return }
         observeAuthState()
     }
     
@@ -236,55 +242,54 @@ class AuthViewModel: ObservableObject {
     }
     
     // MARK: Update Profile
-    func updateProfile(firstName: String, lastName: String, phone: String) async {
-        guard var currentUser = user else { return }
-        
-        let cleanFirstName = firstName.trimmingCharacters(in: .whitespacesAndNewlines)
-        let cleanLastName = lastName.trimmingCharacters(in: .whitespacesAndNewlines)
-        let cleanPhone = phone.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        guard !cleanFirstName.isEmpty, !cleanLastName.isEmpty else {
-            errorMessage = "First and last name are required."
-            return
+    func updateProfile(
+        firstName: String,
+        lastName: String,
+        phone: String
+    ) async throws -> AppUser {
+        guard var currentUser = user else {
+            throw ProfileUpdateError.notAuthenticated
+        }
+
+        var draft = ProfileDraft(user: currentUser)
+        draft.firstName = firstName
+        draft.lastName = lastName
+        draft.phone = phone
+        let normalized = draft.normalized
+
+        guard !normalized.firstName.isEmpty, !normalized.lastName.isEmpty else {
+            throw ProfileUpdateError.requiredName
         }
 
         if let demoSession = environment.demoSession {
-            currentUser.firstName = cleanFirstName
-            currentUser.lastName = cleanLastName
-            currentUser.phone = cleanPhone
+            guard let updatedUser = demoSession.updateProfile(
+                userId: currentUser.id,
+                firstName: normalized.firstName,
+                lastName: normalized.lastName,
+                phone: normalized.phone
+            ) else {
+                throw ProfileUpdateError.notAuthenticated
+            }
 
-            user = demoSession.updateProfile(
-                userId: currentUser.id,
-                firstName: cleanFirstName,
-                lastName: cleanLastName,
-                phone: cleanPhone
-            )
-            successMessage = "Profile updated."
-            errorMessage = nil
-            return
+            user = updatedUser
+            return updatedUser
         }
-        
+
         isLoading = true
-        errorMessage = nil
-        
-        currentUser.firstName = cleanFirstName
-        currentUser.lastName = cleanLastName
-        currentUser.phone = cleanPhone
-        
-        do {
-            try await FirestoreService.shared.updateProfile(
-                userId: currentUser.id,
-                firstName: cleanFirstName,
-                lastName: cleanLastName,
-                phone: cleanPhone
-            )
-            user = currentUser
-            successMessage = "Profile updated."
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-        
-        isLoading = false
+        defer { isLoading = false }
+
+        try await profileStore.updateProfile(
+            userId: currentUser.id,
+            firstName: normalized.firstName,
+            lastName: normalized.lastName,
+            phone: normalized.phone
+        )
+
+        currentUser.firstName = normalized.firstName
+        currentUser.lastName = normalized.lastName
+        currentUser.phone = normalized.phone
+        user = currentUser
+        return currentUser
     }
     
     // MARK: Logout
@@ -333,6 +338,20 @@ class AuthViewModel: ObservableObject {
             return "This account has been disabled."
         default:
             return error.localizedDescription
+        }
+    }
+}
+
+enum ProfileUpdateError: LocalizedError, Equatable {
+    case notAuthenticated
+    case requiredName
+
+    var errorDescription: String? {
+        switch self {
+        case .notAuthenticated:
+            "Sign in before updating your profile."
+        case .requiredName:
+            "First and last name are required."
         }
     }
 }

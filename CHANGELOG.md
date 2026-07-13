@@ -6,9 +6,11 @@
 
 - Approved Question Mark Home logo, app icon, and runtime brand assets.
 - Semantic light and dark color tokens based on The Sign Palette.
+- Validated profile draft state with focused unit coverage.
 
 ### Changed
 
 - Replaced the previous blue theme foundation with the approved For Rent identity.
 - Updated global action tint and shared button states.
 - Applied the approved logo to the authentication entry screen.
+- Changed profile updates to return explicit results while preserving the signed-in user on persistence failure.
