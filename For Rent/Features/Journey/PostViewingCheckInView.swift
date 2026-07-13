@@ -194,6 +194,16 @@ struct PostViewingCheckInView: View {
                 .font(ForRentTheme.Typography.supporting)
                 .foregroundStyle(ForRentTheme.Colors.textSecondary)
                 .fixedSize(horizontal: false, vertical: true)
+
+            if decision.choice == .yes {
+                NavigationLink {
+                    OfferComposerView(requestId: requestId, propertyId: propertyId)
+                } label: {
+                    Label("Create structured offer", systemImage: "doc.text.fill")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(ForRentPrimaryButtonStyle())
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(ForRentTheme.Spacing.md)
