@@ -149,13 +149,23 @@ struct ConversationThreadView: View {
             }
             .buttonStyle(ForRentPrimaryButtonStyle())
         } else if authVM.user?.role == .tenant, request.status == .viewingScheduled {
-            NavigationLink {
-                ViewingBookingView(requestId: request.id, propertyId: request.propertyId)
-            } label: {
-                Label("Review viewing", systemImage: "calendar.circle.fill")
-                    .frame(maxWidth: .infinity)
+            VStack(spacing: ForRentTheme.Spacing.sm) {
+                NavigationLink {
+                    ViewingBookingView(requestId: request.id, propertyId: request.propertyId)
+                } label: {
+                    Label("Review viewing", systemImage: "calendar.circle.fill")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(ForRentPrimaryButtonStyle())
+
+                NavigationLink {
+                    PostViewingCheckInView(requestId: request.id, propertyId: request.propertyId)
+                } label: {
+                    Label("Post-viewing check-in", systemImage: "checklist")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(ForRentSecondaryButtonStyle())
             }
-            .buttonStyle(ForRentPrimaryButtonStyle())
         } else if authVM.user?.role == .tenant,
                   request.status.canTransition(to: .cancelled) {
             Button(role: .destructive) {
