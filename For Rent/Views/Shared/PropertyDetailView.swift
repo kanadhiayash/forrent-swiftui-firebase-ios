@@ -17,6 +17,10 @@ struct PropertyDetailView: View {
     @EnvironmentObject var authVM: AuthViewModel
     
     @State private var protectedActionMessage: String?
+
+    private var presentation: ListingPresentation {
+        ListingPresentation(property: property)
+    }
     
     var body: some View {
         
@@ -36,7 +40,7 @@ struct PropertyDetailView: View {
                             .font(.subheadline)
                             .foregroundStyle(ForRentTheme.Colors.body)
 
-                        Text("\(property.rent.toCurrency()) \(property.resolvedPricingCadence.shortLabel)")
+                        Text(presentation.priceText)
                             .font(.title2.bold())
                             .foregroundStyle(ForRentTheme.Colors.primary)
                     }
@@ -176,13 +180,8 @@ struct PropertyDetailView: View {
             alignment: .leading,
             spacing: ForRentTheme.Spacing.xs
         ) {
-            detailFact("\(property.bedrooms) bedrooms", icon: "bed.double.fill")
-            detailFact("\(property.bathrooms) bathrooms", icon: "bathtub.fill")
-            detailFact(property.category.title, icon: "square.grid.2x2.fill")
-            detailFact(property.resolvedPricingCadence.title, icon: "calendar")
-
-            if let maxGuests = property.resolvedMaxGuests {
-                detailFact("Up to \(maxGuests) guests", icon: "person.2.fill")
+            ForEach(presentation.compareFacts) { fact in
+                detailFact(fact.title, icon: fact.systemImage)
             }
         }
     }
@@ -195,17 +194,11 @@ struct PropertyDetailView: View {
                 systemImage: "bubble.left.and.text.bubble.right.fill",
                 tone: request.status == .accepted ? .success : .info
             )
-        } else if property.isListed && !property.isAssigned {
-            StatusChip(
-                title: "Available",
-                systemImage: "checkmark.seal.fill",
-                tone: .success
-            )
         } else {
             StatusChip(
-                title: "Unavailable",
-                systemImage: "lock.fill",
-                tone: .neutral
+                title: presentation.availabilityTitle,
+                systemImage: presentation.availabilityIcon,
+                tone: presentation.availabilityTone
             )
         }
     }
@@ -221,17 +214,17 @@ struct PropertyDetailView: View {
                         tone: request.status == .accepted ? .success : .info
                     )
                 } else {
-                    Button("Request a viewing") {
+                    Button(presentation.primaryActionTitle(for: user.role)) {
                         Task {
                             await requestVM.sendRequest(property: property, user: user)
                         }
                     }
                     .primaryButtonStyle()
-                    .disabled(requestVM.isLoading)
+                    .disabled(requestVM.isLoading || !property.isListed || property.isAssigned)
                     .sensoryFeedback(.success, trigger: requestVM.successMessage)
                 }
             } else if user.role == .guest {
-                Button("Sign in to request a viewing") {
+                Button(presentation.primaryActionTitle(for: user.role)) {
                     authVM.requireAuthentication(for: property)
                 }
                 .primaryButtonStyle()
@@ -260,7 +253,7 @@ struct PropertyDetailView: View {
     }
     
     private func share() {
-        let text = "\(property.title) - \(property.rent.toCurrency()) \(property.resolvedPricingCadence.shortLabel)"
+        let text = "\(property.title) - \(presentation.priceText)"
         let activityVC = UIActivityViewController(activityItems: [text], applicationActivities: nil)
         
         guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,

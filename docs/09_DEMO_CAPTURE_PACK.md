@@ -75,6 +75,8 @@ git check-ignore -v GoogleService-Info.plist
 4. Confirm duplicate inquiries are blocked.
 5. Confirm pending, accepted, rejected, or cancelled states appear in the
    listing detail and inquiry surfaces.
+6. Open Account and confirm the identity header, contact details, support rows,
+   and session controls render clearly.
 
 ### Landlord
 
@@ -85,6 +87,10 @@ git check-ignore -v GoogleService-Info.plist
 5. Accept and reject inquiries.
 6. Confirm accepted inquiries make the property unavailable or assigned in the
    relevant surfaces.
+7. Open Account, edit Personal Details, save a valid change, then use Reset Demo
+   to restore the deterministic seed profile.
+8. Reopen Personal Details, trigger an invalid first-name save, confirm the
+   inline error, then verify unsaved changes require a discard confirmation.
 
 ### Accessibility and Layout
 
@@ -108,6 +114,8 @@ Capture real screenshots for these states:
 - Renter inquiry submitted state.
 - Landlord listing management.
 - Landlord inquiry review.
+- Account identity and grouped account actions.
+- Personal Details inline validation.
 - Empty or unavailable state.
 
 Recommended public asset paths, once real media exists:

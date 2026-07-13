@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum StatusChipTone {
+enum StatusChipTone: Equatable {
     case neutral
     case success
     case warning

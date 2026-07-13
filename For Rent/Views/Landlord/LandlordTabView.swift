@@ -22,31 +22,28 @@ struct LandlordTabView: View {
                 Label("Properties", systemImage: "building.2")
             }
             
-            // MARK: ADD PROPERTY (REPLACES SAVED)
+            // MARK: CALENDAR
             NavigationStack {
-                AddPropertyView()
-                    .navigationTitle("Add Property")
+                ViewingCalendarView()
             }
             .tabItem {
-                Label("Add", systemImage: "plus.circle.fill")
+                Label("Calendar", systemImage: "calendar")
             }
             
-            // MARK: REQUESTS
+            // MARK: INBOX
             NavigationStack {
                 RequestsView()
-                    .navigationTitle("Requests")
             }
             .tabItem {
-                Label("Requests", systemImage: "bubble.left.and.bubble.right")
+                Label("Inbox", systemImage: "bubble.left.and.bubble.right")
             }
             
-            // MARK: PROFILE
+            // MARK: ACCOUNT
             NavigationStack {
-                ProfileView()
-                    .navigationTitle("Profile")
+                AccountView()
             }
             .tabItem {
-                Label("Profile", systemImage: "person")
+                Label("Account", systemImage: "person.crop.circle")
             }
         }
     }

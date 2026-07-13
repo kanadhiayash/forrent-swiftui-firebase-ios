@@ -10,6 +10,10 @@ import SwiftUI
 struct PropertyCardView: View {
     
     var property: Property
+
+    private var presentation: ListingPresentation {
+        ListingPresentation(property: property)
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: ForRentTheme.Spacing.md) {
@@ -28,7 +32,7 @@ struct PropertyCardView: View {
                         .foregroundStyle(ForRentTheme.Colors.body)
                         .lineLimit(1)
 
-                    Text("\(property.rent.toCurrency()) \(property.resolvedPricingCadence.shortLabel)")
+                    Text(presentation.priceText)
                         .font(.title3.weight(.semibold))
                         .foregroundStyle(ForRentTheme.Colors.ink)
                     
@@ -41,28 +45,19 @@ struct PropertyCardView: View {
                 }
                 
                 HStack(spacing: ForRentTheme.Spacing.xs) {
-                    PropertyFactBadge(
-                        systemImage: "bed.double.fill",
-                        text: property.bedrooms == 1 ? "1 bed" : "\(property.bedrooms) beds"
-                    )
-                    
-                    PropertyFactBadge(
-                        systemImage: "bathtub.fill",
-                        text: property.bathrooms == 1 ? "1 bath" : "\(property.bathrooms) baths"
-                    )
+                    ForEach(Array(presentation.compareFacts.prefix(2))) { fact in
+                        PropertyFactBadge(
+                            systemImage: fact.systemImage,
+                            text: fact.title
+                        )
+                    }
                 }
                 
                 HStack(spacing: ForRentTheme.Spacing.xs) {
                     StatusChip(
-                        title: listingStatus.title,
-                        systemImage: listingStatus.systemImage,
-                        tone: listingStatus.tone
-                    )
-                    
-                    StatusChip(
-                        title: occupancyStatus.title,
-                        systemImage: occupancyStatus.systemImage,
-                        tone: occupancyStatus.tone
+                        title: presentation.availabilityTitle,
+                        systemImage: presentation.availabilityIcon,
+                        tone: presentation.availabilityTone
                     )
                 }
                 .accessibilityElement(children: .contain)
@@ -108,36 +103,8 @@ struct PropertyCardView: View {
             }
     }
     
-    private var listingStatus: (title: String, systemImage: String, tone: StatusChipTone) {
-        if property.isListed {
-            return ("Listed", "eye.fill", .info)
-        }
-        
-        return ("Not listed", "eye.slash.fill", .neutral)
-    }
-    
-    private var occupancyStatus: (title: String, systemImage: String, tone: StatusChipTone) {
-        if property.isAssigned {
-            return ("Assigned", "person.fill.checkmark", .warning)
-        }
-        
-        if property.isListed {
-            return ("Available", "checkmark.circle.fill", .success)
-        }
-        
-        return ("Unavailable", "minus.circle.fill", .danger)
-    }
-    
     private var accessibilitySummary: String {
-        [
-            property.title,
-            property.resolvedLocationName,
-            "\(property.rent.toCurrency()) \(property.resolvedPricingCadence.title)",
-            property.bedrooms == 1 ? "1 bedroom" : "\(property.bedrooms) bedrooms",
-            property.bathrooms == 1 ? "1 bathroom" : "\(property.bathrooms) bathrooms",
-            listingStatus.title,
-            occupancyStatus.title
-        ].joined(separator: ", ")
+        presentation.accessibilitySummary
     }
 }
 
