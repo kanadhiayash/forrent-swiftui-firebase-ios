@@ -68,7 +68,7 @@ struct TenantHomeView: View {
                     }
                 }
             }
-            .navigationTitle("Explore")
+            .navigationTitle("Discover")
             .task {
                 if propertyVM.properties.isEmpty {
                     await propertyVM.fetchProperties(for: authVM.user)
