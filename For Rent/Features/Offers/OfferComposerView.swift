@@ -21,7 +21,7 @@ struct OfferComposerView: View {
                         header
 
                         if let submittedOffer {
-                            OfferReviewCard(snapshot: OfferReviewSnapshot(offer: submittedOffer))
+                            OfferReviewCard(offer: submittedOffer)
                         } else {
                             termsForm
                             submitButton(request: request)
@@ -153,7 +153,11 @@ struct OfferComposerView: View {
 }
 
 private struct OfferReviewCard: View {
-    let snapshot: OfferReviewSnapshot
+    let offer: RentalOffer
+
+    private var snapshot: OfferReviewSnapshot {
+        OfferReviewSnapshot(offer: offer)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: ForRentTheme.Spacing.md) {
@@ -177,6 +181,16 @@ private struct OfferReviewCard: View {
                 .font(ForRentTheme.Typography.supporting)
                 .foregroundStyle(ForRentTheme.Colors.textSecondary)
                 .fixedSize(horizontal: false, vertical: true)
+
+            if offer.status == .mutuallyAccepted {
+                NavigationLink {
+                    AgreementPreparationView(offer: offer)
+                } label: {
+                    Label("Continue to agreement prep", systemImage: "doc.badge.gearshape")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(ForRentPrimaryButtonStyle())
+            }
         }
         .padding(ForRentTheme.Spacing.md)
         .background(ForRentTheme.Colors.surface)
