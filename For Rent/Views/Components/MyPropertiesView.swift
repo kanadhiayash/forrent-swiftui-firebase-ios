@@ -84,6 +84,15 @@ struct MyPropertiesView: View {
         .task {
             await propertyVM.fetchProperties(for: authVM.user)
         }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink {
+                    AddPropertyView()
+                } label: {
+                    Label("Add Property", systemImage: "plus")
+                }
+            }
+        }
         .alert("Delete property?", isPresented: Binding(
             get: { propertyToDelete != nil },
             set: { if !$0 { propertyToDelete = nil } }

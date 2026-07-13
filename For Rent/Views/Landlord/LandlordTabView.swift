@@ -22,13 +22,12 @@ struct LandlordTabView: View {
                 Label("Properties", systemImage: "building.2")
             }
             
-            // MARK: ADD PROPERTY (REPLACES SAVED)
+            // MARK: CALENDAR
             NavigationStack {
-                AddPropertyView()
-                    .navigationTitle("Add Property")
+                ViewingCalendarView()
             }
             .tabItem {
-                Label("Add", systemImage: "plus.circle.fill")
+                Label("Calendar", systemImage: "calendar")
             }
             
             // MARK: INBOX
