@@ -117,7 +117,7 @@ struct PersonalDetailsView: View {
                         Text("Save")
                     }
                 }
-                .disabled(!editor.canSave)
+                .disabled(!editor.hasChanges || editor.isSaving)
                 .accessibilityIdentifier("personalDetails.save")
             }
         }
@@ -159,12 +159,20 @@ struct PersonalDetailsView: View {
                 .accessibilityLabel(title)
 
             if let error {
-                Label(error, systemImage: "exclamationmark.circle.fill")
-                    .font(ForRentTheme.Typography.supporting)
-                    .foregroundStyle(ForRentTheme.Colors.destructive)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityAddTraits(.isStaticText)
-                    .accessibilityIdentifier(errorIdentifier)
+                HStack(alignment: .top, spacing: ForRentTheme.Spacing.xs) {
+                    Image(systemName: "exclamationmark.circle.fill")
+                        .accessibilityHidden(true)
+
+                    Text(error)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier(errorIdentifier)
+                }
+                .font(ForRentTheme.Typography.supporting)
+                .foregroundStyle(ForRentTheme.Colors.destructive)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(error)
+                .accessibilityAddTraits(.isStaticText)
+                .accessibilityIdentifier(errorIdentifier)
             }
         }
     }
