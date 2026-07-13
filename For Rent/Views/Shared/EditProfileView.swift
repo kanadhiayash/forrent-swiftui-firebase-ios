@@ -14,6 +14,7 @@ struct EditProfileView: View {
     @State private var firstName = ""
     @State private var lastName = ""
     @State private var phone = ""
+    @State private var saveErrorMessage: String?
     
     var body: some View {
         
@@ -28,11 +29,15 @@ struct EditProfileView: View {
             
             Button("Update Profile") {
                 Task {
-                    await authVM.updateProfile(
-                        firstName: firstName,
-                        lastName: lastName,
-                        phone: phone
-                    )
+                    do {
+                        _ = try await authVM.updateProfile(
+                            firstName: firstName,
+                            lastName: lastName,
+                            phone: phone
+                        )
+                    } catch {
+                        saveErrorMessage = error.localizedDescription
+                    }
                 }
             }
             .disabled(authVM.isLoading)
@@ -48,6 +53,6 @@ struct EditProfileView: View {
                 LoadingView()
             }
         }
-        .showError($authVM.errorMessage)
+        .showError($saveErrorMessage)
     }
 }
