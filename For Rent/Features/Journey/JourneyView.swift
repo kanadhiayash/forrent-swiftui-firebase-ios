@@ -82,8 +82,10 @@ private struct JourneyCard: View {
             }
 
             NavigationLink {
-                RequestsView()
-                    .navigationTitle("Journey details")
+                ConversationThreadView(
+                    requestId: snapshot.requestId,
+                    propertyId: snapshot.propertyId
+                )
             } label: {
                 Label(snapshot.primaryActionTitle, systemImage: primaryActionIcon)
                     .frame(maxWidth: .infinity)

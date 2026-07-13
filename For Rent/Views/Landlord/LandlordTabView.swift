@@ -31,13 +31,12 @@ struct LandlordTabView: View {
                 Label("Add", systemImage: "plus.circle.fill")
             }
             
-            // MARK: REQUESTS
+            // MARK: INBOX
             NavigationStack {
                 RequestsView()
-                    .navigationTitle("Requests")
             }
             .tabItem {
-                Label("Requests", systemImage: "bubble.left.and.bubble.right")
+                Label("Inbox", systemImage: "bubble.left.and.bubble.right")
             }
             
             // MARK: ACCOUNT
