@@ -140,6 +140,22 @@ struct ConversationThreadView: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(ForRentPrimaryButtonStyle())
+        } else if authVM.user?.role == .tenant, request.status == .acknowledged {
+            NavigationLink {
+                ViewingBookingView(requestId: request.id, propertyId: request.propertyId)
+            } label: {
+                Label("Book viewing", systemImage: "calendar.badge.clock")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(ForRentPrimaryButtonStyle())
+        } else if authVM.user?.role == .tenant, request.status == .viewingScheduled {
+            NavigationLink {
+                ViewingBookingView(requestId: request.id, propertyId: request.propertyId)
+            } label: {
+                Label("Review viewing", systemImage: "calendar.circle.fill")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(ForRentPrimaryButtonStyle())
         } else if authVM.user?.role == .tenant,
                   request.status.canTransition(to: .cancelled) {
             Button(role: .destructive) {
