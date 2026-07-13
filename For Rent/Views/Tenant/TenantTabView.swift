@@ -13,13 +13,13 @@ struct TenantTabView: View {
         
         TabView {
             
-            // MARK: Explore
+            // MARK: Discover
             NavigationStack {
                 TenantHomeView()
-                    .navigationTitle("Explore")
+                    .navigationTitle("Discover")
             }
             .tabItem {
-                Label("Explore", systemImage: "house")
+                Label("Discover", systemImage: "house")
             }
             
             // MARK: Shortlist
@@ -31,13 +31,13 @@ struct TenantTabView: View {
                 Label("Saved", systemImage: "heart")
             }
             
-            // MARK: Requests
+            // MARK: Journey
             NavigationStack {
-                RequestsView()
-                    .navigationTitle("Requests")
+                JourneyView()
+                    .navigationTitle("Journey")
             }
             .tabItem {
-                Label("Requests", systemImage: "bubble.left.and.bubble.right")
+                Label("Journey", systemImage: "map")
             }
             
             // MARK: Account
