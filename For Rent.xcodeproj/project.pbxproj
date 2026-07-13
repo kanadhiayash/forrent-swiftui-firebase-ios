@@ -16,6 +16,7 @@
 		F36A48122F7B000100F76A51 /* MarketplaceModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48112F7B000100F76A51 /* MarketplaceModelsTests.swift */; };
 		F36A48212F7B000100F76A51 /* ForRentSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48232F7B000100F76A51 /* ForRentSmokeTests.swift */; };
 		F36A48332F89000100F76A51 /* ForRentThemeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48322F89000100F76A51 /* ForRentThemeTests.swift */; };
+		F36A48352F8A000100F76A51 /* ProfileEditorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48342F8A000100F76A51 /* ProfileEditorTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +44,7 @@
 		F36A48222F7B000100F76A51 /* For RentUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "For RentUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F36A48232F7B000100F76A51 /* ForRentSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForRentSmokeTests.swift; sourceTree = "<group>"; };
 		F36A48322F89000100F76A51 /* ForRentThemeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForRentThemeTests.swift; sourceTree = "<group>"; };
+		F36A48342F8A000100F76A51 /* ProfileEditorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditorTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -109,6 +111,7 @@
 				F36A48032F7B000100F76A51 /* AppEnvironmentTests.swift */,
 				F36A48112F7B000100F76A51 /* MarketplaceModelsTests.swift */,
 				F36A48322F89000100F76A51 /* ForRentThemeTests.swift */,
+				F36A48342F8A000100F76A51 /* ProfileEditorTests.swift */,
 			);
 			path = "For RentTests";
 			sourceTree = "<group>";
@@ -277,6 +280,7 @@
 				F36A48042F7B000100F76A51 /* AppEnvironmentTests.swift in Sources */,
 				F36A48122F7B000100F76A51 /* MarketplaceModelsTests.swift in Sources */,
 				F36A48332F89000100F76A51 /* ForRentThemeTests.swift in Sources */,
+				F36A48352F8A000100F76A51 /* ProfileEditorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
