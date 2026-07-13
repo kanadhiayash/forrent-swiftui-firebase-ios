@@ -18,6 +18,7 @@
 		F36A48332F89000100F76A51 /* ForRentThemeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48322F89000100F76A51 /* ForRentThemeTests.swift */; };
 		F36A48352F8A000100F76A51 /* ProfileEditorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48342F8A000100F76A51 /* ProfileEditorTests.swift */; };
 		F36A48372F8A000100F76A51 /* AuthProfileUpdateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48362F8A000100F76A51 /* AuthProfileUpdateTests.swift */; };
+		F36A48392F8B000100F76A51 /* AppUserDisplayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48382F8B000100F76A51 /* AppUserDisplayTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		F36A48322F89000100F76A51 /* ForRentThemeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForRentThemeTests.swift; sourceTree = "<group>"; };
 		F36A48342F8A000100F76A51 /* ProfileEditorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditorTests.swift; sourceTree = "<group>"; };
 		F36A48362F8A000100F76A51 /* AuthProfileUpdateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthProfileUpdateTests.swift; sourceTree = "<group>"; };
+		F36A48382F8B000100F76A51 /* AppUserDisplayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUserDisplayTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -115,6 +117,7 @@
 				F36A48322F89000100F76A51 /* ForRentThemeTests.swift */,
 				F36A48342F8A000100F76A51 /* ProfileEditorTests.swift */,
 				F36A48362F8A000100F76A51 /* AuthProfileUpdateTests.swift */,
+				F36A48382F8B000100F76A51 /* AppUserDisplayTests.swift */,
 			);
 			path = "For RentTests";
 			sourceTree = "<group>";
@@ -285,6 +288,7 @@
 				F36A48332F89000100F76A51 /* ForRentThemeTests.swift in Sources */,
 				F36A48352F8A000100F76A51 /* ProfileEditorTests.swift in Sources */,
 				F36A48372F8A000100F76A51 /* AuthProfileUpdateTests.swift in Sources */,
+				F36A48392F8B000100F76A51 /* AppUserDisplayTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
