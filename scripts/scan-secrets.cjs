@@ -28,6 +28,10 @@ const patterns = [
 ];
 
 for (const file of trackedFiles) {
+  if (!fs.existsSync(file)) {
+    continue;
+  }
+
   if (/\.(?:png|jpg|jpeg|gif|xcassets)$/i.test(file)) {
     continue;
   }

@@ -2,9 +2,6 @@
 //  StatusChip.swift
 //  For Rent
 //
-//  Created by Codex on 2026-06-18.
-//
-
 import SwiftUI
 
 enum StatusChipTone: Equatable {

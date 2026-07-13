@@ -117,16 +117,13 @@ No README screenshot, demo video, production claim, deployment link, App Store
 claim, or metric should be added until it is captured or verified from the
 current app.
 
-## Local Zeref OS
-
-The optional `.zeref/` clone is ignored. The tested commit and privacy-first
-setup are recorded in `docs/ZEREF_OS_SETUP.md`.
-
 ## Documentation
 
 - `DESIGN.md`: visual and interaction system
 - `PRODUCT.md`: scope and product principles
 - `docs/architecture.md`: boundaries and data flow
+- `docs/04_FIREBASE_AND_DATA_MODEL.md`: Firebase shape and data boundaries
 - `docs/05_TESTING_AND_VERIFICATION.md`: evidence and QA matrix
 - `docs/GITHUB_PROTECTION.md`: required remote repository settings
 - `docs/09_DEMO_CAPTURE_PACK.md`: demo recording and screenshot checklist
+- `docs/brand/`: approved brand source and runtime asset references
