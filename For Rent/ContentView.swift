@@ -40,7 +40,7 @@ struct ContentView: View {
                 LoginView()
             }
         }
-        .tint(ForRentTheme.Colors.action)
+        .tint(ForRentTheme.Colors.actionPrimary)
         .feedbackHost()
         .onChange(of: authVM.successMessage) { _, message in
             publishSuccess(message) { authVM.successMessage = nil }

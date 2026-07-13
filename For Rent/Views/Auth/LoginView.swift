@@ -10,6 +10,7 @@ import SwiftUI
 struct LoginView: View {
     
     @EnvironmentObject var authVM: AuthViewModel
+    @Environment(\.colorScheme) private var colorScheme
     
     @State private var email = ""
     @State private var password = ""
@@ -19,22 +20,17 @@ struct LoginView: View {
             ScrollView {
                 VStack(spacing: ForRentTheme.Spacing.lg) {
                     VStack(spacing: ForRentTheme.Spacing.sm) {
-                        Image(systemName: "building.2.crop.circle.fill")
-                            .font(.system(size: 52))
-                            .foregroundStyle(ForRentTheme.Colors.yellow)
+                        BrandLockupView()
+                            .accessibilityLabel("For Rent")
 
-                        Text("For Rent")
-                            .font(.largeTitle.bold())
-                            .foregroundStyle(.white)
-
-                        Text("Find a place that fits your life.")
+                        Text("Find your answer. Find your place.")
                             .font(.headline)
-                            .foregroundStyle(.white.opacity(0.86))
+                            .foregroundStyle(ForRentTheme.Colors.link)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 42)
                     .padding(.horizontal, ForRentTheme.Spacing.lg)
-                    .background(ForRentTheme.Colors.primary)
+                    .background(brandHeaderBackground)
 
                     if authVM.isDemoMode {
                         demoChooser
@@ -61,6 +57,10 @@ struct LoginView: View {
                 }
             }
         }
+    }
+
+    private var brandHeaderBackground: Color {
+        colorScheme == .dark ? ForRentTheme.Brand.white : ForRentTheme.Colors.surface
     }
 
     private var demoChooser: some View {
