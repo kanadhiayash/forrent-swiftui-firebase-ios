@@ -28,6 +28,7 @@
 		F36A484D2F92000100F76A51 /* AgreementModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A484C2F92000100F76A51 /* AgreementModelsTests.swift */; };
 		F36A484F2F93000100F76A51 /* MarketQualificationChecklistTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A484E2F93000100F76A51 /* MarketQualificationChecklistTests.swift */; };
 		F36A48512F94000100F76A51 /* JourneyTimelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48502F94000100F76A51 /* JourneyTimelineTests.swift */; };
+		F36A48532F95000100F76A51 /* ConversationPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48522F95000100F76A51 /* ConversationPresentationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		F36A484C2F92000100F76A51 /* AgreementModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgreementModelsTests.swift; sourceTree = "<group>"; };
 		F36A484E2F93000100F76A51 /* MarketQualificationChecklistTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketQualificationChecklistTests.swift; sourceTree = "<group>"; };
 		F36A48502F94000100F76A51 /* JourneyTimelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyTimelineTests.swift; sourceTree = "<group>"; };
+		F36A48522F95000100F76A51 /* ConversationPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationPresentationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -145,6 +147,7 @@
 				F36A484C2F92000100F76A51 /* AgreementModelsTests.swift */,
 				F36A484E2F93000100F76A51 /* MarketQualificationChecklistTests.swift */,
 				F36A48502F94000100F76A51 /* JourneyTimelineTests.swift */,
+				F36A48522F95000100F76A51 /* ConversationPresentationTests.swift */,
 			);
 			path = "For RentTests";
 			sourceTree = "<group>";
@@ -325,6 +328,7 @@
 				F36A484D2F92000100F76A51 /* AgreementModelsTests.swift in Sources */,
 				F36A484F2F93000100F76A51 /* MarketQualificationChecklistTests.swift in Sources */,
 				F36A48512F94000100F76A51 /* JourneyTimelineTests.swift in Sources */,
+				F36A48532F95000100F76A51 /* ConversationPresentationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

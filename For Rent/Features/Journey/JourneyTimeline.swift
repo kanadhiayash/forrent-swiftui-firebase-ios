@@ -40,6 +40,7 @@ struct JourneyTimelineStep: Identifiable, Equatable {
 
 struct JourneyTimelineSnapshot: Identifiable, Equatable {
     let requestId: String
+    let propertyId: String
     let propertyTitle: String
     let propertyLocation: String
     let statusTitle: String
@@ -53,6 +54,7 @@ struct JourneyTimelineSnapshot: Identifiable, Equatable {
 
     init(request: Request, property: Property?) {
         requestId = request.id
+        propertyId = request.propertyId
         propertyTitle = property?.title ?? "Rental inquiry"
         propertyLocation = property?.resolvedLocationName ?? "Location unavailable"
         statusTitle = request.status.title
@@ -87,7 +89,7 @@ struct JourneyTimelineSnapshot: Identifiable, Equatable {
                 stage: .listing,
                 title: "Listing selected",
                 detail: "The property context stays attached to the journey.",
-                state: ended ? .complete : .complete
+                state: .complete
             ),
             JourneyTimelineStep(
                 stage: .conversation,
