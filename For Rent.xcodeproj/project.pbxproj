@@ -30,6 +30,7 @@
 		F36A48512F94000100F76A51 /* JourneyTimelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48502F94000100F76A51 /* JourneyTimelineTests.swift */; };
 		F36A48532F95000100F76A51 /* ConversationPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48522F95000100F76A51 /* ConversationPresentationTests.swift */; };
 		F36A48552F96000100F76A51 /* ViewingSchedulePresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48542F96000100F76A51 /* ViewingSchedulePresentationTests.swift */; };
+		F36A48572F97000100F76A51 /* PostViewingDecisionPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36A48562F97000100F76A51 /* PostViewingDecisionPresentationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +72,7 @@
 		F36A48502F94000100F76A51 /* JourneyTimelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyTimelineTests.swift; sourceTree = "<group>"; };
 		F36A48522F95000100F76A51 /* ConversationPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationPresentationTests.swift; sourceTree = "<group>"; };
 		F36A48542F96000100F76A51 /* ViewingSchedulePresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewingSchedulePresentationTests.swift; sourceTree = "<group>"; };
+		F36A48562F97000100F76A51 /* PostViewingDecisionPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewingDecisionPresentationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -151,6 +153,7 @@
 				F36A48502F94000100F76A51 /* JourneyTimelineTests.swift */,
 				F36A48522F95000100F76A51 /* ConversationPresentationTests.swift */,
 				F36A48542F96000100F76A51 /* ViewingSchedulePresentationTests.swift */,
+				F36A48562F97000100F76A51 /* PostViewingDecisionPresentationTests.swift */,
 			);
 			path = "For RentTests";
 			sourceTree = "<group>";
@@ -333,6 +336,7 @@
 				F36A48512F94000100F76A51 /* JourneyTimelineTests.swift in Sources */,
 				F36A48532F95000100F76A51 /* ConversationPresentationTests.swift in Sources */,
 				F36A48552F96000100F76A51 /* ViewingSchedulePresentationTests.swift in Sources */,
+				F36A48572F97000100F76A51 /* PostViewingDecisionPresentationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
