@@ -5,6 +5,7 @@ struct AccountView: View {
     @EnvironmentObject private var feedbackCenter: FeedbackCenter
 
     @State private var confirmation: Confirmation?
+    @State private var personalDetailsUser: AppUser?
 
     var body: some View {
         List {
@@ -17,8 +18,8 @@ struct AccountView: View {
                 }
 
                 Section("Personal Information") {
-                    NavigationLink {
-                        EditProfileView()
+                    Button {
+                        personalDetailsUser = user
                     } label: {
                         AccountNavigationRow(
                             icon: "person.text.rectangle",
@@ -27,6 +28,7 @@ struct AccountView: View {
                             supportingText: nil
                         )
                     }
+                    .buttonStyle(.plain)
                     .accessibilityIdentifier("account.personalDetails")
                 }
 
@@ -74,6 +76,11 @@ struct AccountView: View {
         .background(ForRentTheme.Colors.canvas)
         .navigationTitle("Account")
         .accessibilityIdentifier("account.screen")
+        .fullScreenCover(item: $personalDetailsUser) { user in
+            NavigationStack {
+                PersonalDetailsView(user: user)
+            }
+        }
         .alert(
             confirmation?.title ?? "",
             isPresented: confirmationBinding,
