@@ -1,0 +1,216 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userPath(userId) {
+      return /databases/$(database)/documents/users/$(userId);
+    }
+
+    function currentRole() {
+      return get(userPath(request.auth.uid)).data.role;
+    }
+
+    function isTenant() {
+      return isSignedIn() && currentRole() == "tenant";
+    }
+
+    function isLandlord() {
+      return isSignedIn() && currentRole() == "landlord";
+    }
+
+    function userRequiredKeys() {
+      return ["id", "email", "role", "firstName", "lastName", "phone"];
+    }
+
+    function userOptionalKeys() {
+      return ["shortlisted"];
+    }
+
+    function userAllowedKeys() {
+      return userRequiredKeys().concat(userOptionalKeys());
+    }
+
+    function immutableUserFields(userId) {
+      return request.resource.data.id == userId &&
+        request.resource.data.email == resource.data.email &&
+        request.resource.data.role == resource.data.role;
+    }
+
+    function propertyRequiredKeys() {
+      return [
+        "id",
+        "title",
+        "details",
+        "rent",
+        "bedrooms",
+        "bathrooms",
+        "latitude",
+        "longitude",
+        "imageNames",
+        "landlordId",
+        "isListed",
+        "isAssigned",
+        "category",
+        "pricingCadence"
+      ];
+    }
+
+    function propertyOptionalKeys() {
+      return ["locationName", "amenities", "maxGuests"];
+    }
+
+    function propertyAllowedKeys() {
+      return propertyRequiredKeys().concat(propertyOptionalKeys());
+    }
+
+    function requestRequiredKeys() {
+      return [
+        "id",
+        "propertyId",
+        "landlordId",
+        "tenantId",
+        "tenantName",
+        "tenantPhone",
+        "status"
+      ];
+    }
+
+    function requestOptionalKeys() {
+      return [
+        "intent",
+        "tenantEmail",
+        "partySize",
+        "message",
+        "preferredViewingDate",
+        "startDate",
+        "endDate",
+        "createdAt",
+        "updatedAt",
+        "decisionAt"
+      ];
+    }
+
+    function requestAllowedKeys() {
+      return requestRequiredKeys().concat(requestOptionalKeys());
+    }
+
+    function validRequestStatus(status) {
+      return status in [
+        "submitted",
+        "acknowledged",
+        "viewing_scheduled",
+        "accepted",
+        "rejected",
+        "cancelled",
+        "expired"
+      ];
+    }
+
+    match /users/{userId} {
+      allow create: if
+        isSignedIn() &&
+        request.auth.uid == userId &&
+        request.resource.data.keys().hasAll(userRequiredKeys()) &&
+        request.resource.data.keys().hasOnly(userAllowedKeys()) &&
+        request.resource.data.id == userId &&
+        request.resource.data.email is string &&
+        request.resource.data.role in ["tenant", "landlord"];
+
+      allow read: if isSignedIn() && request.auth.uid == userId;
+
+      allow update: if
+        isSignedIn() &&
+        request.auth.uid == userId &&
+        request.resource.data.keys().hasAll(userRequiredKeys()) &&
+        request.resource.data.keys().hasOnly(userAllowedKeys()) &&
+        immutableUserFields(userId) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "firstName",
+          "lastName",
+          "phone",
+          "shortlisted"
+        ]);
+
+      allow delete: if false;
+
+      match /savedListings/{listingId} {
+        allow read, create, delete: if isSignedIn() && request.auth.uid == userId;
+        allow update: if false;
+      }
+    }
+
+    match /properties/{propertyId} {
+      allow get, list: if
+        (resource.data.isListed == true && resource.data.isAssigned == false) ||
+        (isSignedIn() && resource.data.landlordId == request.auth.uid);
+
+      allow create: if
+        isLandlord() &&
+        request.resource.data.keys().hasAll(propertyRequiredKeys()) &&
+        request.resource.data.keys().hasOnly(propertyAllowedKeys()) &&
+        request.resource.data.id == propertyId &&
+        request.resource.data.landlordId == request.auth.uid &&
+        request.resource.data.isListed == false &&
+        request.resource.data.isAssigned == false;
+
+      allow update: if
+        isLandlord() &&
+        resource.data.landlordId == request.auth.uid &&
+        request.resource.data.keys().hasAll(propertyRequiredKeys()) &&
+        request.resource.data.keys().hasOnly(propertyAllowedKeys()) &&
+        request.resource.data.landlordId == resource.data.landlordId &&
+        request.resource.data.id == resource.data.id &&
+        request.resource.data.isAssigned == resource.data.isAssigned &&
+        (
+          request.resource.data.isListed == resource.data.isListed ||
+          request.resource.data.isListed == false
+        );
+
+      allow delete: if
+        isLandlord() &&
+        resource.data.landlordId == request.auth.uid;
+    }
+
+    match /requests/{requestId} {
+      allow get: if
+        isSignedIn() &&
+        (
+          !exists(/databases/$(database)/documents/requests/$(requestId)) ||
+          resource.data.tenantId == request.auth.uid ||
+          resource.data.landlordId == request.auth.uid
+        );
+
+      allow list: if
+        isSignedIn() &&
+        (
+          resource.data.tenantId == request.auth.uid ||
+          resource.data.landlordId == request.auth.uid
+        );
+
+      allow create: if
+        isTenant() &&
+        request.resource.data.keys().hasAll(requestRequiredKeys()) &&
+        request.resource.data.keys().hasOnly(requestAllowedKeys()) &&
+        request.resource.data.id == requestId &&
+        request.resource.data.tenantId == request.auth.uid &&
+        request.resource.data.status == "submitted" &&
+        validRequestStatus(request.resource.data.status) &&
+        requestId == request.auth.uid + "_" + request.resource.data.propertyId &&
+        exists(/databases/$(database)/documents/properties/$(request.resource.data.propertyId)) &&
+        get(/databases/$(database)/documents/properties/$(request.resource.data.propertyId)).data.landlordId ==
+          request.resource.data.landlordId &&
+        get(/databases/$(database)/documents/properties/$(request.resource.data.propertyId)).data.isListed == true &&
+        get(/databases/$(database)/documents/properties/$(request.resource.data.propertyId)).data.isAssigned == false;
+
+      // Status changes are performed by trusted callable functions so the
+      // related property and inquiry update can be committed atomically.
+      allow update: if false;
+
+      allow delete: if false;
+    }
+  }
+}
